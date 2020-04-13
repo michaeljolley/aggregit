@@ -2,7 +2,7 @@
 import * as github from '@actions/github'
 
 const run = async (): Promise<void> => {
-  console.dir(github.context.repo)
+  console.dir(github.context.payload)
 }
 
 run()

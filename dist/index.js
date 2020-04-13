@@ -4673,7 +4673,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 //import * as core from '@actions/core'
 const github = __importStar(__webpack_require__(469));
 const run = () => __awaiter(void 0, void 0, void 0, function* () {
-    console.dir(github.context.repo);
+    console.dir(github.context.payload);
 });
 run();
 
