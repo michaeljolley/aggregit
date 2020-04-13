@@ -1,0 +1,9 @@
+name: Aggregit
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: michaeljolley/aggregit@master
