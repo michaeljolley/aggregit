@@ -1,0 +1,8 @@
+name: Aggregit
+description: Records metrics of the GitHub repository in a Firebase database.
+runs:
+  using: node12
+  main: dist/index.js
+branding:
+  icon: mail
+  color: red
