@@ -21,11 +21,13 @@ export class Firebase {
   }
 
   async save(repoMetric: IRepoMetric) {
-    let repoRef = this.db.collection('repos').doc(repoMetric.name)
+    const docRef = this.db.collection('repos').doc(repoMetric.name)
 
-    let metricDate = new Date().toISOString().slice(0, 10)
+    const metricDate = new Date().toISOString().slice(0, 10)
 
-    repoRef.set({
+    const setDoc = await docRef.set({
+      name: repoMetric.name,
+      url: repoMetric.url,
       forks: {[metricDate]: repoMetric.forks},
       issues: {[metricDate]: repoMetric.issues},
       stars: {[metricDate]: repoMetric.stars},
