@@ -16,7 +16,7 @@ export class Metrics {
     this.octokit = new github.GitHub(this.githubToken)
   }
 
-  async get(): Promise<IRepoMetric> {
+  async get(): Promise<IRepoMetric | undefined> {
     core.info('Retrieving repo metrics')
 
     const repo = await this.getRepo()
@@ -25,42 +25,50 @@ export class Metrics {
     const participation = await this.getParticipation()
     const traffic = await this.getTraffic()
 
-    const prCount = totals
-      ? totals.repository.closedPRs.totalCount +
+    // Unless we've successfully gathered all metrics, don't
+    // record metrics
+    if (repo && totals && participation && traffic) {
+      const prCount =
+        totals.repository.closedPRs.totalCount +
         totals.repository.mergedPRs.totalCount +
         totals.repository.openPRs.totalCount
-      : 0
-    const issueCount = totals
-      ? totals.repository.openIssues.totalCount +
+      const issueCount =
+        totals.repository.openIssues.totalCount +
         totals.repository.closedIssues.totalCount
-      : 0
-    const todaysViews = traffic?.views[traffic.views.length - 1] || {
-      count: 0,
-      uniques: 0
+
+      const todaysViews =
+        traffic.views.length > 0
+          ? traffic.views[traffic.views.length - 1]
+          : {
+              count: 0,
+              uniques: 0
+            }
+
+      const repoMetric: IRepoMetric = {
+        name: github.context.repo.repo,
+        url: repo.html_url,
+
+        issues: repo.open_issues_count,
+        forks: repo.forks_count,
+        stars: repo.stargazers_count,
+        watchers: repo.watchers_count,
+        totalViews: todaysViews.count,
+        uniqueViews: todaysViews.uniques,
+        pullRequests: totals.repository.openPRs.totalCount,
+        contributors: totals.repository.contributors.totalCount,
+        commits: participation?.all.reduce((p, c) => p + c),
+
+        totalPullRequests: prCount,
+        totalIssues: issueCount
+      }
+
+      core.info(JSON.stringify(repoMetric))
+      core.info('Retrieving repo metrics complete')
+
+      return repoMetric
+    } else {
+      return undefined
     }
-
-    const repoMetric: IRepoMetric = {
-      name: github.context.repo.repo,
-      url: repo?.html_url || '',
-
-      issues: repo?.open_issues_count || 0,
-      forks: repo?.forks_count || 0,
-      stars: repo?.stargazers_count || 0,
-      watchers: repo?.watchers_count || 0,
-      totalViews: todaysViews.count,
-      uniqueViews: todaysViews.uniques,
-      pullRequests: totals?.repository.openPRs.totalCount || 0,
-      contributors: totals?.repository.contributors.totalCount || 0,
-      commits: participation?.all.reduce((p, c) => p + c) || 0,
-
-      totalPullRequests: prCount,
-      totalIssues: issueCount
-    }
-
-    core.info(JSON.stringify(repoMetric))
-    core.info('Retrieving repo metrics complete')
-
-    return repoMetric
   }
 
   private async getRepo(): Promise<ReposGetResponse | undefined> {

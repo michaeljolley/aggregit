@@ -14,19 +14,15 @@
   },
   "author": "Michael Jolley <michael.jolley@vonage.com>",
   "license": "MIT",
+  "repository": "https://github.com/MichaelJolley/aggregit",
   "dependencies": {
     "@actions/core": "^1.2.1",
     "@actions/github": "^2.0.1",
-    "@actions/glob": "^0.1.0",
-    "@actions/io": "^1.0.2",
-    "atob-lite": "^2.0.0",
-    "btoa-lite": "^1.0.0",
-    "octokit-commit-multiple-files": "^2.0.0"
+    "firebase-admin": "^8.10.0"
   },
   "devDependencies": {
+    "@google-cloud/firestore": "^3.7.4",
     "@octokit/types": "^2.1.0",
-    "@types/atob-lite": "^2.0.0",
-    "@types/btoa-lite": "^1.0.0",
     "@types/jest": "^24.9.0",
     "@types/node": "^13.1.8",
     "@typescript-eslint/parser": "^2.16.0",
