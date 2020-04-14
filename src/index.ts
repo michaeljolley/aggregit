@@ -2,7 +2,7 @@ import * as core from '@actions/core'
 import * as github from '@actions/github'
 
 const run = async (): Promise<void> => {
-  const githubToken: string = process.env.GITHUB_TOKEN || ''
+  const githubToken: string = core.getInput('githubToken')
 
   const octokit: github.GitHub = new github.GitHub(githubToken)
 
