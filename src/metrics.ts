@@ -128,16 +128,17 @@ export class Metrics {
   }
 
   private async getTraffic(): Promise<ReposGetViewsResponse | undefined> {
-    try {
-      return (
-        await this.octokit.repos.getViews({
-          owner: github.context.repo.owner,
-          repo: github.context.repo.repo
-        })
-      ).data
-    } catch (err) {
-      core.error(`Error getting traffic: ${err}`)
-      return undefined
-    }
+    return undefined
+    // try {
+    //   return (
+    //     await this.octokit.repos.getViews({
+    //       owner: github.context.repo.owner,
+    //       repo: github.context.repo.repo
+    //     })
+    //   ).data
+    // } catch (err) {
+    //   core.error(`Error getting traffic: ${err}`)
+    //   return undefined
+    // }
   }
 }
