@@ -7,3 +7,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: michaeljolley/aggregit@master
+      with:
+        githubToken: ${{ secrets.GITHUB_TOKEN }}
