@@ -15,7 +15,11 @@ firebase.initializeApp({
 })
 
 export class Firebase {
-  private db = firebase.database()
+  private db: firebase.database.Database
+
+  constructor() {
+    this.db = firebase.database()
+  }
 
   async save(repoMetric: IRepoMetric) {
     let reposRef = this.db.ref(`repos`)
