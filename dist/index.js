@@ -7742,9 +7742,11 @@ const github = __importStar(__webpack_require__(469));
 class Metrics {
     constructor() {
         this.repoTotalsQuery = `
-  query {
     repository(owner: "${github.context.repo.owner}", name:"${github.context.repo.repo}") {
-      totalIssues: issues() {
+      openIssues: issues(states:OPEN) {
+        totalCount
+      }
+      closedIssues: issues(states:CLOSED) {
         totalCount
       }
       openPRs: pullRequests(states:OPEN) {
@@ -7756,8 +7758,7 @@ class Metrics {
       mergedPRs: pullRequests(states:MERGED) {
         totalCount
       }
-    }
-  }`;
+    }`;
         this.githubToken = core.getInput('githubToken');
         this.octokit = new github.GitHub(this.githubToken);
     }
