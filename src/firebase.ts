@@ -4,7 +4,7 @@ import * as firebase from 'firebase-admin'
 import {IRepoMetric} from './interfaces'
 
 const firebaseDbName = core.getInput('firebaseDbName')
-const private_key = core.getInput('private_key').replace('\\\\', '\\')
+const private_key = core.getInput('private_key')
 
 const serviceAccount: firebase.ServiceAccount = {
   projectId: core.getInput('project_id'),
