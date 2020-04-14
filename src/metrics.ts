@@ -23,7 +23,11 @@ export class Metrics {
 
     const totals = await this.getRepoTotals()
     const participation = await this.getParticipation()
-    const traffic = await this.getTraffic()
+    //const traffic = await this.getTraffic()
+
+    core.info(JSON.stringify(repo))
+    core.info(JSON.stringify(totals))
+    core.info(JSON.stringify(participation))
 
     // Unless we've successfully gathered all metrics, don't
     // record metrics
