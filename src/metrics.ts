@@ -25,10 +25,6 @@ export class Metrics {
     const participation = await this.getParticipation()
     //const traffic = await this.getTraffic()
 
-    core.info(JSON.stringify(repo))
-    core.info(JSON.stringify(totals))
-    core.info(JSON.stringify(participation))
-
     // Unless we've successfully gathered all metrics, don't
     // record metrics
     if (repo && totals && participation) {
@@ -96,7 +92,8 @@ export class Metrics {
   private async getRepoTotals(): Promise<IGraphQLResponse | undefined> {
     try {
       const totals = await this.octokit.graphql(this.repoTotalsQuery)
-      return totals ? totals.data : undefined
+      core.info(JSON.stringify(totals))
+      return totals?.data || undefined
     } catch (err) {
       core.error(`Error getting repo totals: ${err}`)
       return undefined
