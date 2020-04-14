@@ -92,8 +92,7 @@ export class Metrics {
   private async getRepoTotals(): Promise<IGraphQLResponse | undefined> {
     try {
       const totals = await this.octokit.graphql(this.repoTotalsQuery)
-      core.info(JSON.stringify(totals))
-      return totals?.data || undefined
+      return (totals as IGraphQLResponse) || undefined
     } catch (err) {
       core.error(`Error getting repo totals: ${err}`)
       return undefined
