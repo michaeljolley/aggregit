@@ -4662,24 +4662,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const core = __importStar(__webpack_require__(470));
-const github = __importStar(__webpack_require__(469));
+const metrics_1 = __webpack_require__(701);
+//import * as db from 'firebase'
+const metrics = new metrics_1.Metrics();
 const run = () => __awaiter(void 0, void 0, void 0, function* () {
-    const githubToken = core.getInput('githubToken');
-    const octokit = new github.GitHub(githubToken);
-    const { data: repo } = yield octokit.repos.get({
-        owner: github.context.repo.owner,
-        repo: github.context.repo.repo
-    });
-    console.dir(repo);
+    try {
+        const repoMetric = yield metrics.get();
+        //  await db.save(repoMetric)
+    }
+    catch (err) {
+        console.error(err);
+    }
 });
 run();
 
@@ -7717,6 +7711,100 @@ module.exports = (promise, onFinally) => {
 		})
 	);
 };
+
+
+/***/ }),
+
+/***/ 701:
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const core = __importStar(__webpack_require__(470));
+const github = __importStar(__webpack_require__(469));
+class Metrics {
+    constructor() {
+        this.repoTotalsQuery = `
+  query {
+    repository(owner: "${github.context.repo.owner}", name:"${github.context.repo.repo}") {
+      totalIssues: issues() {
+        totalCount
+      }
+      openPRs: pullRequests(states:OPEN) {
+        totalCount
+      }
+      closedPRs: pullRequests(states:CLOSED) {
+        totalCount
+      }
+      mergedPRs: pullRequests(states:MERGED) {
+        totalCount
+      }
+    }
+  }`;
+        this.githubToken = core.getInput('githubToken');
+        this.octokit = new github.GitHub(this.githubToken);
+    }
+    get() {
+        return __awaiter(this, void 0, void 0, function* () {
+            core.info('Retrieving repo metrics');
+            const repo = yield this.getRepo();
+            //const totals = await this.getRepoTotals()
+            const repoMetric = {
+                name: github.context.repo.repo,
+                url: repo.html_url,
+                issues: repo.open_issues_count,
+                forks: repo.forks_count,
+                stars: repo.stargazers_count,
+                watchers: repo.watchers_count,
+                views: 0,
+                pullRequests: 0,
+                contributors: 0,
+                commits: 0,
+                totalPullRequests: 0,
+                totalIssues: 0
+            };
+            core.info(JSON.stringify(repoMetric));
+            core.info('Retrieving repo metrics complete');
+            return repoMetric;
+        });
+    }
+    getRepo() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (yield this.octokit.repos.get({
+                owner: github.context.repo.owner,
+                repo: github.context.repo.repo
+            })).data;
+        });
+    }
+    getRepoTotals() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const totals = yield this.octokit.graphql(this.repoTotalsQuery);
+            if (totals) {
+                core.info(JSON.stringify(totals));
+            }
+            return undefined;
+            // return totals ? totals.data : null
+        });
+    }
+}
+exports.Metrics = Metrics;
 
 
 /***/ }),

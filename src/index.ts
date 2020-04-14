@@ -1,17 +1,17 @@
-import * as core from '@actions/core'
-import * as github from '@actions/github'
+import {IRepoMetric} from './interfaces/IRepoMetric'
+
+import {Metrics} from './metrics'
+//import * as db from 'firebase'
+
+const metrics = new Metrics()
 
 const run = async (): Promise<void> => {
-  const githubToken: string = core.getInput('githubToken')
-
-  const octokit: github.GitHub = new github.GitHub(githubToken)
-
-  const {data: repo} = await octokit.repos.get({
-    owner: github.context.repo.owner,
-    repo: github.context.repo.repo
-  })
-
-  console.dir(repo)
+  try {
+    const repoMetric: IRepoMetric = await metrics.get()
+    //  await db.save(repoMetric)
+  } catch (err) {
+    console.error(err)
+  }
 }
 
 run()
