@@ -61,6 +61,7 @@ export class Metrics {
   }
 
   private repoTotalsQuery = `
+  query {
     repository(owner: "${github.context.repo.owner}", name:"${github.context.repo.repo}") {
       openIssues: issues(states:OPEN) {
         totalCount
@@ -77,5 +78,6 @@ export class Metrics {
       mergedPRs: pullRequests(states:MERGED) {
         totalCount
       }
-    }`
+    }
+  }`
 }
