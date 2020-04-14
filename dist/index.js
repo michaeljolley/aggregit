@@ -7768,7 +7768,7 @@ class Metrics {
         this.octokit = new github.GitHub(this.githubToken);
     }
     get() {
-        var _a, _b;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j;
         return __awaiter(this, void 0, void 0, function* () {
             core.info('Retrieving repo metrics');
             const repo = yield this.getRepo();
@@ -7784,19 +7784,22 @@ class Metrics {
                 ? totals.repository.openIssues.totalCount +
                     totals.repository.closedIssues.totalCount
                 : 0;
-            const todaysViews = traffic.views[traffic.views.length - 1];
+            const todaysViews = ((_a = traffic) === null || _a === void 0 ? void 0 : _a.views[traffic.views.length - 1]) || {
+                count: 0,
+                uniques: 0
+            };
             const repoMetric = {
                 name: github.context.repo.repo,
-                url: repo.html_url,
-                issues: repo.open_issues_count,
-                forks: repo.forks_count,
-                stars: repo.stargazers_count,
-                watchers: repo.watchers_count,
+                url: ((_b = repo) === null || _b === void 0 ? void 0 : _b.html_url) || '',
+                issues: ((_c = repo) === null || _c === void 0 ? void 0 : _c.open_issues_count) || 0,
+                forks: ((_d = repo) === null || _d === void 0 ? void 0 : _d.forks_count) || 0,
+                stars: ((_e = repo) === null || _e === void 0 ? void 0 : _e.stargazers_count) || 0,
+                watchers: ((_f = repo) === null || _f === void 0 ? void 0 : _f.watchers_count) || 0,
                 totalViews: todaysViews.count,
                 uniqueViews: todaysViews.uniques,
-                pullRequests: ((_a = totals) === null || _a === void 0 ? void 0 : _a.repository.openPRs.totalCount) || 0,
-                contributors: ((_b = totals) === null || _b === void 0 ? void 0 : _b.repository.contributors.totalCount) || 0,
-                commits: participation.all.reduce((p, c) => p + c),
+                pullRequests: ((_g = totals) === null || _g === void 0 ? void 0 : _g.repository.openPRs.totalCount) || 0,
+                contributors: ((_h = totals) === null || _h === void 0 ? void 0 : _h.repository.contributors.totalCount) || 0,
+                commits: ((_j = participation) === null || _j === void 0 ? void 0 : _j.all.reduce((p, c) => p + c)) || 0,
                 totalPullRequests: prCount,
                 totalIssues: issueCount
             };
@@ -7807,32 +7810,56 @@ class Metrics {
     }
     getRepo() {
         return __awaiter(this, void 0, void 0, function* () {
-            return (yield this.octokit.repos.get({
-                owner: github.context.repo.owner,
-                repo: github.context.repo.repo
-            })).data;
+            try {
+                return (yield this.octokit.repos.get({
+                    owner: github.context.repo.owner,
+                    repo: github.context.repo.repo
+                })).data;
+            }
+            catch (err) {
+                core.error(`Error getting repo: ${err}`);
+                return undefined;
+            }
         });
     }
     getRepoTotals() {
         return __awaiter(this, void 0, void 0, function* () {
-            const totals = yield this.octokit.graphql(this.repoTotalsQuery);
-            return totals ? totals.data : undefined;
+            try {
+                const totals = yield this.octokit.graphql(this.repoTotalsQuery);
+                return totals ? totals.data : undefined;
+            }
+            catch (err) {
+                core.error(`Error getting repo totals: ${err}`);
+                return undefined;
+            }
         });
     }
     getParticipation() {
         return __awaiter(this, void 0, void 0, function* () {
-            return (yield this.octokit.repos.getParticipationStats({
-                owner: github.context.repo.owner,
-                repo: github.context.repo.repo
-            })).data;
+            try {
+                return (yield this.octokit.repos.getParticipationStats({
+                    owner: github.context.repo.owner,
+                    repo: github.context.repo.repo
+                })).data;
+            }
+            catch (err) {
+                core.error(`Error getting participation: ${err}`);
+                return undefined;
+            }
         });
     }
     getTraffic() {
         return __awaiter(this, void 0, void 0, function* () {
-            return (yield this.octokit.repos.getViews({
-                owner: github.context.repo.owner,
-                repo: github.context.repo.repo
-            })).data;
+            try {
+                return (yield this.octokit.repos.getViews({
+                    owner: github.context.repo.owner,
+                    repo: github.context.repo.repo
+                })).data;
+            }
+            catch (err) {
+                core.error(`Error getting traffic: ${err}`);
+                return undefined;
+            }
         });
     }
 }
