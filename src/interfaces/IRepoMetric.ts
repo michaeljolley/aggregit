@@ -6,10 +6,12 @@ export interface IRepoMetric {
   forks: number
   stars: number
   watchers: number
-  views: number
   pullRequests: number
   contributors: number
   commits: number
+
+  totalViews: number
+  uniqueViews: number
 
   totalPullRequests: number
   totalIssues: number

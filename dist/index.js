@@ -7759,16 +7759,32 @@ class Metrics {
       mergedPRs: pullRequests(states:MERGED) {
         totalCount
       }
+      contributors: collaborators(affiliation:ALL) {
+        totalCount
+      }
     }
   }`;
         this.githubToken = core.getInput('githubToken');
         this.octokit = new github.GitHub(this.githubToken);
     }
     get() {
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
             core.info('Retrieving repo metrics');
             const repo = yield this.getRepo();
             const totals = yield this.getRepoTotals();
+            const participation = yield this.getParticipation();
+            const traffic = yield this.getTraffic();
+            const prCount = totals
+                ? totals.repository.closedPRs.totalCount +
+                    totals.repository.mergedPRs.totalCount +
+                    totals.repository.openPRs.totalCount
+                : 0;
+            const issueCount = totals
+                ? totals.repository.openIssues.totalCount +
+                    totals.repository.closedIssues.totalCount
+                : 0;
+            const todaysViews = traffic.views[traffic.views.length - 1];
             const repoMetric = {
                 name: github.context.repo.repo,
                 url: repo.html_url,
@@ -7776,12 +7792,13 @@ class Metrics {
                 forks: repo.forks_count,
                 stars: repo.stargazers_count,
                 watchers: repo.watchers_count,
-                views: totals ? 0 : 1,
-                pullRequests: 0,
-                contributors: 0,
-                commits: 0,
-                totalPullRequests: 0,
-                totalIssues: 0
+                totalViews: todaysViews.count,
+                uniqueViews: todaysViews.uniques,
+                pullRequests: ((_a = totals) === null || _a === void 0 ? void 0 : _a.repository.openPRs.totalCount) || 0,
+                contributors: ((_b = totals) === null || _b === void 0 ? void 0 : _b.repository.contributors.totalCount) || 0,
+                commits: participation.all.reduce((p, c) => p + c),
+                totalPullRequests: prCount,
+                totalIssues: issueCount
             };
             core.info(JSON.stringify(repoMetric));
             core.info('Retrieving repo metrics complete');
@@ -7799,11 +7816,23 @@ class Metrics {
     getRepoTotals() {
         return __awaiter(this, void 0, void 0, function* () {
             const totals = yield this.octokit.graphql(this.repoTotalsQuery);
-            if (totals) {
-                core.info(JSON.stringify(totals));
-            }
-            return undefined;
-            // return totals ? totals.data : null
+            return totals ? totals.data : undefined;
+        });
+    }
+    getParticipation() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (yield this.octokit.repos.getParticipationStats({
+                owner: github.context.repo.owner,
+                repo: github.context.repo.repo
+            })).data;
+        });
+    }
+    getTraffic() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (yield this.octokit.repos.getViews({
+                owner: github.context.repo.owner,
+                repo: github.context.repo.repo
+            })).data;
         });
     }
 }
