@@ -7765,7 +7765,7 @@ class Metrics {
         return __awaiter(this, void 0, void 0, function* () {
             core.info('Retrieving repo metrics');
             const repo = yield this.getRepo();
-            //const totals = await this.getRepoTotals()
+            const totals = yield this.getRepoTotals();
             const repoMetric = {
                 name: github.context.repo.repo,
                 url: repo.html_url,
@@ -7773,7 +7773,7 @@ class Metrics {
                 forks: repo.forks_count,
                 stars: repo.stargazers_count,
                 watchers: repo.watchers_count,
-                views: 0,
+                views: totals ? 0 : 1,
                 pullRequests: 0,
                 contributors: 0,
                 commits: 0,

@@ -17,7 +17,7 @@ export class Metrics {
 
     const repo = await this.getRepo()
 
-    //const totals = await this.getRepoTotals()
+    const totals = await this.getRepoTotals()
 
     const repoMetric: IRepoMetric = {
       name: github.context.repo.repo,
@@ -27,7 +27,7 @@ export class Metrics {
       forks: repo.forks_count,
       stars: repo.stargazers_count,
       watchers: repo.watchers_count,
-      views: 0,
+      views: totals ? 0 : 1,
       pullRequests: 0,
       contributors: 0,
       commits: 0,
