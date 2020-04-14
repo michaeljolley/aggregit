@@ -1,5 +1,4 @@
 import * as core from '@actions/core'
-import * as github from '@actions/github'
 import * as firebase from 'firebase-admin'
 import {IRepoMetric} from './interfaces'
 
@@ -15,31 +14,29 @@ firebase.initializeApp({
 })
 
 export class Firebase {
-  private db: firebase.database.Database
+  private db: FirebaseFirestore.Firestore
 
   constructor() {
-    this.db = firebase.database()
+    this.db = firebase.firestore()
   }
 
   async save(repoMetric: IRepoMetric) {
-    let reposRef = this.db.ref(`repos`)
+    let repoRef = this.db.collection('repos').doc(repoMetric.name)
 
     let metricDate = new Date().toISOString().slice(0, 10)
 
-    reposRef.set({
-      [repoMetric.name]: {
-        forks: [{[metricDate]: repoMetric.forks}],
-        issues: [{[metricDate]: repoMetric.issues}],
-        stars: [{[metricDate]: repoMetric.stars}],
-        watchers: [{[metricDate]: repoMetric.watchers}],
-        pullRequests: [{[metricDate]: repoMetric.pullRequests}],
-        contributors: [{[metricDate]: repoMetric.contributors}],
-        commits: [{[metricDate]: repoMetric.commits}],
-        totalViews: [{[metricDate]: repoMetric.totalViews}],
-        uniqueViews: [{[metricDate]: repoMetric.uniqueViews}],
-        totalPullRequests: [{[metricDate]: repoMetric.totalPullRequests}],
-        totalIssues: [{[metricDate]: repoMetric.totalIssues}]
-      }
+    repoRef.set({
+      forks: {[metricDate]: repoMetric.forks},
+      issues: {[metricDate]: repoMetric.issues},
+      stars: {[metricDate]: repoMetric.stars},
+      watchers: {[metricDate]: repoMetric.watchers},
+      pullRequests: {[metricDate]: repoMetric.pullRequests},
+      contributors: {[metricDate]: repoMetric.contributors},
+      commits: {[metricDate]: repoMetric.commits},
+      totalViews: {[metricDate]: repoMetric.totalViews},
+      uniqueViews: {[metricDate]: repoMetric.uniqueViews},
+      totalPullRequests: {[metricDate]: repoMetric.totalPullRequests},
+      totalIssues: {[metricDate]: repoMetric.totalIssues}
     })
   }
 }
