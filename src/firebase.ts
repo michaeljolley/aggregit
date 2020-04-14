@@ -3,34 +3,22 @@ import * as github from '@actions/github'
 import * as firebase from 'firebase-admin'
 import {IRepoMetric} from './interfaces'
 
-const firebaseDbName = core.getInput('firebaseDbName')
-const private_key = core.getInput('private_key')
-
 const serviceAccount: firebase.ServiceAccount = {
   projectId: core.getInput('project_id'),
-  privateKey: private_key,
+  privateKey: core.getInput('private_key'),
   clientEmail: core.getInput('client_email')
-  // type: core.getInput('type'),
-  //project_id: core.getInput('project_id'),
-  // private_key_id: core.getInput('private_key_id'),
-  //private_key: private_key,
-  //client_email: core.getInput('client_email')
-  // client_id: core.getInput('client_id'),
-  // auth_uri: core.getInput('auth_uri'),
-  // token_uri: core.getInput('token_uri'),
-  // auth_provider_x509_cert_url: core.getInput('auth_provider_x509_cert_url'),
-  // client_x509_cert_url: core.getInput('client_x509_cert_url')
 }
 
 firebase.initializeApp({
-  credential: firebase.credential.cert(serviceAccount)
+  credential: firebase.credential.cert(serviceAccount),
+  databaseURL: core.getInput('firebaseDbUrl')
 })
 
 export class Firebase {
   private db = firebase.database()
 
   async save(repoMetric: IRepoMetric) {
-    let reposRef = this.db.ref(`${firebaseDbName}/repos`)
+    let reposRef = this.db.ref(`repos`)
 
     let metricDate = new Date().toISOString().slice(0, 10)
 
