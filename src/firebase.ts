@@ -2,7 +2,6 @@ import * as core from '@actions/core'
 import * as github from '@actions/github'
 import * as firebase from 'firebase-admin'
 import {IRepoMetric} from './interfaces'
-import {App} from '@google-cloud/firestore'
 
 let private_key = core.getInput('private_key').replace('\\\\', '\\')
 
