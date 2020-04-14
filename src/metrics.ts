@@ -27,7 +27,8 @@ export class Metrics {
 
     // Unless we've successfully gathered all metrics, don't
     // record metrics
-    if (repo && totals && participation && traffic) {
+    if (repo && totals && participation) {
+      // && traffic) {
       const prCount =
         totals.repository.closedPRs.totalCount +
         totals.repository.mergedPRs.totalCount +
@@ -36,13 +37,16 @@ export class Metrics {
         totals.repository.openIssues.totalCount +
         totals.repository.closedIssues.totalCount
 
-      const todaysViews =
-        traffic.views.length > 0
-          ? traffic.views[traffic.views.length - 1]
-          : {
-              count: 0,
-              uniques: 0
-            }
+      const todaysViews = {
+        count: 0,
+        uniques: 0
+      }
+      // traffic.views.length > 0
+      //   ? traffic.views[traffic.views.length - 1]
+      //   : {
+      //       count: 0,
+      //       uniques: 0
+      //     }
 
       const repoMetric: IRepoMetric = {
         name: github.context.repo.repo,
