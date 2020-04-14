@@ -19,3 +19,4 @@ jobs:
         token_uri: ${{ secrets.token_uri }}
         auth_provider_x509_cert_url: ${{ secrets.auth_provider_x509_cert_url }}
         client_x509_cert_url: ${{ secrets.client_x509_cert_url }}
+        firebaseDbName: opentok-developer
