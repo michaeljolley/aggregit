@@ -10,8 +10,8 @@ export interface IRepoMetric {
   contributors: number
   commits: number
 
-  totalViews: number
-  uniqueViews: number
+  // totalViews: number
+  // uniqueViews: number
 
   totalPullRequests: number
   totalIssues: number

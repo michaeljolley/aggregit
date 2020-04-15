@@ -18,13 +18,11 @@
   "dependencies": {
     "@actions/core": "^1.2.1",
     "@actions/github": "^2.0.1",
-    "axios": "^0.19.2",
     "firebase-admin": "^8.10.0"
   },
   "devDependencies": {
     "@google-cloud/firestore": "^3.7.4",
     "@octokit/types": "^2.1.0",
-    "@types/axios": "^0.14.0",
     "@types/jest": "^24.9.0",
     "@types/node": "^13.1.8",
     "@typescript-eslint/parser": "^2.16.0",

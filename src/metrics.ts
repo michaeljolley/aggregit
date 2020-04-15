@@ -1,7 +1,6 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 import {IGraphQLResponse, IRepoMetric} from './interfaces'
-import * as axios from 'axios'
 
 export class Metrics {
   private githubToken: string
@@ -19,13 +18,12 @@ export class Metrics {
 
     const totals = await this.getRepoTotals()
     const participation = await this.getParticipation()
-    const traffic = await this.getTraffic()
-
-    core.info(JSON.stringify(traffic))
+    // const traffic = await this.getTraffic()
 
     // Unless we've successfully gathered all metrics, don't
     // record metrics
-    if (repo && totals && participation && traffic) {
+    if (repo && totals && participation) {
+      // && traffic
       const prCount =
         totals.repository.closedPRs.totalCount +
         totals.repository.mergedPRs.totalCount +
@@ -34,13 +32,13 @@ export class Metrics {
         totals.repository.openIssues.totalCount +
         totals.repository.closedIssues.totalCount
 
-      const todaysViews =
-        traffic.views.length > 0
-          ? traffic.views[traffic.views.length - 1]
-          : {
-              count: 0,
-              uniques: 0
-            }
+      // const todaysViews =
+      //   traffic.views.length > 0
+      //     ? traffic.views[traffic.views.length - 1]
+      //     : {
+      //         count: 0,
+      //         uniques: 0
+      //       }
 
       const repoMetric: IRepoMetric = {
         name: github.context.repo.repo,
@@ -50,8 +48,8 @@ export class Metrics {
         forks: repo.forks_count,
         stars: repo.stargazers_count,
         watchers: repo.watchers_count,
-        totalViews: todaysViews.count,
-        uniqueViews: todaysViews.uniques,
+        // totalViews: todaysViews.count,
+        // uniqueViews: todaysViews.uniques,
         pullRequests: totals.repository.openPRs.totalCount,
         contributors: totals.repository.contributors.totalCount,
         commits: participation?.all.reduce((p: number, c: number) => p + c),
@@ -131,31 +129,17 @@ export class Metrics {
     }
   }
 
-  private async getTraffic(): Promise<any | undefined> {
-    try {
-      const response = await axios.default.get(
-        'https://api.github.com/repos/MichaelJolley/aggregit/traffic/views',
-        {
-          headers: {
-            authorization: `token ${core.getInput('githubPersonalAccessToken')}`
-          }
-        }
-      )
-
-      core.info(JSON.stringify(response))
-
-      // return (
-      //   await this.octokit.repos.getViews({
-      //     headers: {
-      //       authorization: `token ${core.getInput('githubPersonalAccessToken')}`
-      //     },
-      //     owner: github.context.repo.owner,
-      //     repo: github.context.repo.repo
-      //   })
-      // ).data
-    } catch (err) {
-      core.error(`Error getting traffic: ${err}`)
-      return undefined
-    }
-  }
+  // private async getTraffic(): Promise<any | undefined> {
+  //   try {
+  //     return (
+  //       await this.octokit.repos.getViews({
+  //         owner: github.context.repo.owner,
+  //         repo: github.context.repo.repo
+  //       })
+  //     ).data
+  //   } catch (err) {
+  //     core.error(`Error getting traffic: ${err}`)
+  //     return undefined
+  //   }
+  // }
 }
