@@ -1,6 +1,7 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 import {IGraphQLResponse, IRepoMetric} from './interfaces'
+import * as axios from 'axios'
 
 export class Metrics {
   private githubToken: string
@@ -132,15 +133,26 @@ export class Metrics {
 
   private async getTraffic(): Promise<any | undefined> {
     try {
-      return (
-        await this.octokit.repos.getViews({
+      const response = await axios.default.get(
+        'https://api.github.com/repos/MichaelJolley/aggregit/traffic/views',
+        {
           headers: {
             authorization: `token ${core.getInput('githubPersonalAccessToken')}`
-          },
-          owner: github.context.repo.owner,
-          repo: github.context.repo.repo
-        })
-      ).data
+          }
+        }
+      )
+
+      core.info(JSON.stringify(response))
+
+      // return (
+      //   await this.octokit.repos.getViews({
+      //     headers: {
+      //       authorization: `token ${core.getInput('githubPersonalAccessToken')}`
+      //     },
+      //     owner: github.context.repo.owner,
+      //     repo: github.context.repo.repo
+      //   })
+      // ).data
     } catch (err) {
       core.error(`Error getting traffic: ${err}`)
       return undefined
