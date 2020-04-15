@@ -74,14 +74,6 @@ The following schema represents the data that will be saved for each repo docume
         '2020-04-14': 4,
         '2020-04-15': 3
     },
-    uniqueViews:  {
-        '2020-04-14': 4,
-        '2020-04-15': 3
-    },
-    totalViews:  {
-        '2020-04-14': 4,
-        '2020-04-15': 3
-    },
     totalIssues:  {
         '2020-04-14': 4,
         '2020-04-15': 3
