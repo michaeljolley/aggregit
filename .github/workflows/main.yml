@@ -5,7 +5,7 @@ on:
     - cron: "0 0 * * *"
 
 jobs:
-  build:
+  recordMetrics:
     runs-on: ubuntu-latest
     steps:
     - uses: michaeljolley/aggregit@master
