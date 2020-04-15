@@ -1,8 +1,25 @@
-name: Aggregit
+name: AggreGit
 description: Records metrics of the GitHub repository in a Firebase database.
-runs:
-  using: node12
-  main: dist/index.js
 branding:
   icon: mail
   color: red
+runs:
+  using: docker
+  image: Dockerfile
+inputs:
+  githubToken:
+    required: true
+  project_id:
+    required: true
+  private_key:
+    required: true
+  client_email:
+    required: true
+  firebaseDbUrl:
+    required: true
+args:
+  - ${{ inputs.githubToken }}
+  - ${{ inputs.project_id }}
+  - ${{ inputs.private_key }}
+  - ${{ inputs.client_email }}
+  - ${{ inputs.firebaseDbUrl }}
