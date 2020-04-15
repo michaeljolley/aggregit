@@ -18,12 +18,13 @@ export class Metrics {
 
     const totals = await this.getRepoTotals()
     const participation = await this.getParticipation()
-    //const traffic = await this.getTraffic()
+    const traffic = await this.getTraffic()
+
+    core.info(JSON.stringify(traffic))
 
     // Unless we've successfully gathered all metrics, don't
     // record metrics
-    if (repo && totals && participation) {
-      // && traffic) {
+    if (repo && totals && participation && traffic) {
       const prCount =
         totals.repository.closedPRs.totalCount +
         totals.repository.mergedPRs.totalCount +
@@ -32,16 +33,13 @@ export class Metrics {
         totals.repository.openIssues.totalCount +
         totals.repository.closedIssues.totalCount
 
-      const todaysViews = {
-        count: 0,
-        uniques: 0
-      }
-      // traffic.views.length > 0
-      //   ? traffic.views[traffic.views.length - 1]
-      //   : {
-      //       count: 0,
-      //       uniques: 0
-      //     }
+      const todaysViews =
+        traffic.views.length > 0
+          ? traffic.views[traffic.views.length - 1]
+          : {
+              count: 0,
+              uniques: 0
+            }
 
       const repoMetric: IRepoMetric = {
         name: github.context.repo.repo,
@@ -133,17 +131,19 @@ export class Metrics {
   }
 
   private async getTraffic(): Promise<any | undefined> {
-    return undefined
-    // try {
-    //   return (
-    //     await this.octokit.repos.getViews({
-    //       owner: github.context.repo.owner,
-    //       repo: github.context.repo.repo
-    //     })
-    //   ).data
-    // } catch (err) {
-    //   core.error(`Error getting traffic: ${err}`)
-    //   return undefined
-    // }
+    try {
+      return (
+        await this.octokit.repos.getViews({
+          headers: {
+            Authorization: `token ${core.getInput('githubPersonalAccessToken')}`
+          },
+          owner: github.context.repo.owner,
+          repo: github.context.repo.repo
+        })
+      ).data
+    } catch (err) {
+      core.error(`Error getting traffic: ${err}`)
+      return undefined
+    }
   }
 }
