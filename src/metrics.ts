@@ -1,11 +1,6 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 import {IGraphQLResponse, IRepoMetric} from './interfaces'
-import {
-  ReposGetParticipationStatsResponse,
-  ReposGetResponse,
-  ReposGetViewsResponse
-} from '@octokit/rest'
 
 export class Metrics {
   private githubToken: string
@@ -75,7 +70,7 @@ export class Metrics {
     }
   }
 
-  private async getRepo(): Promise<ReposGetResponse | undefined> {
+  private async getRepo(): Promise<any | undefined> {
     try {
       return (
         await this.octokit.repos.get({
@@ -123,9 +118,7 @@ export class Metrics {
     }
   }`
 
-  private async getParticipation(): Promise<
-    ReposGetParticipationStatsResponse | undefined
-  > {
+  private async getParticipation(): Promise<any | undefined> {
     try {
       return (
         await this.octokit.repos.getParticipationStats({
@@ -139,7 +132,7 @@ export class Metrics {
     }
   }
 
-  private async getTraffic(): Promise<ReposGetViewsResponse | undefined> {
+  private async getTraffic(): Promise<any | undefined> {
     return undefined
     // try {
     //   return (
