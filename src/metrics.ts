@@ -60,7 +60,7 @@ export class Metrics {
         uniqueViews: todaysViews.uniques,
         pullRequests: totals.repository.openPRs.totalCount,
         contributors: totals.repository.contributors.totalCount,
-        commits: participation?.all.reduce((p, c) => p + c),
+        commits: participation?.all.reduce((p: number, c: number) => p + c),
 
         totalPullRequests: prCount,
         totalIssues: issueCount
