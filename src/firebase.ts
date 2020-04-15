@@ -20,12 +20,12 @@ export class Firebase {
     this.db = firebase.firestore()
   }
 
-  async save(repoMetric: IRepoMetric) {
+  async save(repoMetric: IRepoMetric): Promise<void> {
     const docRef = this.db.collection('repos').doc(repoMetric.name)
 
     const metricDate = new Date().toISOString().slice(0, 10)
 
-    const setDoc = await docRef.set({
+    await docRef.set({
       name: repoMetric.name,
       url: repoMetric.url,
       forks: {[metricDate]: repoMetric.forks},

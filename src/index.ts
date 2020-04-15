@@ -17,7 +17,7 @@ const run = async (): Promise<void> => {
       core.ExitCode.Failure
     }
   } catch (err) {
-    console.error(err)
+    core.error(err)
   }
 }
 
