@@ -1,4 +1,4 @@
-FROM grpc/node:1.0
+FROM node
 
 WORKDIR /app
 
