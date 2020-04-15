@@ -1,2 +1,94 @@
-
 # aggregit
+
+This action gathers metrics about the repository and loads them to a Firebase database that you specify.
+
+> Repo metrics will be saved into a collection named `repos`.
+
+## Inputs
+
+### `githubToken`
+
+**Required** GitHub secret token. Should provide `${{ secrets.GITHUB_TOKEN }}`
+
+### `project_id`
+
+**Required** Firebase project id provided in your Firebase Admin SDK private key JSON file.
+
+### `private_key`
+
+**Required** Firebase private key provided in your Firebase Admin SDK private key JSON file.
+
+### `client_email`
+
+**Required** Firebase client email provided in your Firebase Admin SDK private key JSON file.
+
+### `firebaseDbUrl`
+
+**Required** Url of your Firebase database.
+
+## Example usage
+
+```yaml
+uses: michaeljolley/aggregit@v1
+with:
+  githubToken: ${{ secrets.GITHUB_TOKEN }}
+  project_id: ${{ secrets.project_id }}
+  private_key: ${{ secrets.private_key }}
+  client_email: ${{ secrets.client_email }}
+  firebaseDbUrl: ${{ secrets.firebaseDbUrl }}
+```
+
+## Sample data
+
+The following schema represents the data that will be saved for each repo document in the Firebase database.
+
+```JS
+{
+    name: 'repoName',
+    url: 'https://github.com/owner/repoName',
+    commits: {
+        '2020-04-14': 4,
+        '2020-04-15': 3
+    },
+    contributors:  {
+        '2020-04-14': 4,
+        '2020-04-15': 3
+    },
+    issues: {
+        '2020-04-14': 4,
+        '2020-04-15': 3
+    },
+    forks: {
+        '2020-04-14': 4,
+        '2020-04-15': 3
+    },
+    pullRequests: {
+        '2020-04-14': 4,
+        '2020-04-15': 3
+    },
+    stars:  {
+        '2020-04-14': 4,
+        '2020-04-15': 3
+    },
+    watchers:  {
+        '2020-04-14': 4,
+        '2020-04-15': 3
+    },
+    uniqueViews:  {
+        '2020-04-14': 4,
+        '2020-04-15': 3
+    },
+    totalViews:  {
+        '2020-04-14': 4,
+        '2020-04-15': 3
+    },
+    totalIssues:  {
+        '2020-04-14': 4,
+        '2020-04-15': 3
+    },
+    totalPullRequests: {
+        '2020-04-14': 4,
+        '2020-04-15': 3
+    }
+}
+```

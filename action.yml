@@ -1,19 +1,24 @@
-name: AggreGit
-description: Records metrics of the GitHub repository in a Firebase database.
+name: aggregit
+description: Records various metrics of the GitHub repository in a Firebase database.
 branding:
-  icon: mail
-  color: red
+  icon: bar-chart-2
+  color: gray-dark
 inputs:
   githubToken:
     required: true
+    description: GitHub secret token
   project_id:
     required: true
+    description: Firebase project id
   private_key:
     required: true
+    description: Firebase private key
   client_email:
     required: true
+    description: Firebase client email
   firebaseDbUrl:
     required: true
+    description: Firebase database url
 runs:
   using: docker
   image: Dockerfile
