@@ -135,7 +135,7 @@ export class Metrics {
       return (
         await this.octokit.repos.getViews({
           headers: {
-            Authorization: `token ${core.getInput('githubPersonalAccessToken')}`
+            authorization: `token ${core.getInput('githubPersonalAccessToken')}`
           },
           owner: github.context.repo.owner,
           repo: github.context.repo.repo
