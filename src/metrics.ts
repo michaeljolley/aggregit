@@ -2,22 +2,17 @@ import * as core from '@actions/core'
 import * as github from '@actions/github'
 import {IGraphQLResponse, IRepoMetric} from './interfaces'
 
+const githubToken: string = core.getInput('githubToken')
+const octokit: github.GitHub = new github.GitHub(githubToken)
+
 export class Metrics {
-  private githubToken: string
-  private octokit: github.GitHub
-
-  constructor() {
-    this.githubToken = core.getInput('githubToken')
-    this.octokit = new github.GitHub(this.githubToken)
-  }
-
   async get(): Promise<IRepoMetric | undefined> {
     core.info('Retrieving repo metrics')
 
     const repo = await this.getRepo()
 
     const totals = await this.getRepoTotals()
-    const participation = await this.getParticipation()
+    const participation = await getParticipation(octokit)
     // const traffic = await this.getTraffic()
 
     // Unless we've successfully gathered all metrics, don't
@@ -70,7 +65,7 @@ export class Metrics {
   private async getRepo(): Promise<any | undefined> {
     try {
       return (
-        await this.octokit.repos.get({
+        await octokit.repos.get({
           owner: github.context.repo.owner,
           repo: github.context.repo.repo
         })
@@ -83,7 +78,7 @@ export class Metrics {
 
   private async getRepoTotals(): Promise<IGraphQLResponse | undefined> {
     try {
-      const totals = await this.octokit.graphql(this.repoTotalsQuery)
+      const totals = await octokit.graphql(this.repoTotalsQuery)
       return (totals as IGraphQLResponse) || undefined
     } catch (err) {
       core.error(`Error getting repo totals: ${err}`)
@@ -115,20 +110,6 @@ export class Metrics {
     }
   }`
 
-  private async getParticipation(): Promise<any | undefined> {
-    try {
-      return (
-        await this.octokit.repos.getParticipationStats({
-          owner: github.context.repo.owner,
-          repo: github.context.repo.repo
-        })
-      ).data
-    } catch (err) {
-      core.error(`Error getting participation: ${err}`)
-      return undefined
-    }
-  }
-
   // private async getTraffic(): Promise<any | undefined> {
   //   try {
   //     return (
@@ -142,4 +123,20 @@ export class Metrics {
   //     return undefined
   //   }
   // }
+}
+
+export const getParticipation = async (
+  octokit: any
+): Promise<any | undefined> => {
+  try {
+    return (
+      await octokit.repos.getParticipationStats({
+        owner: github.context.repo.owner,
+        repo: github.context.repo.repo
+      })
+    ).data
+  } catch (err) {
+    core.error(`Error getting participation: ${err}`)
+    return undefined
+  }
 }
