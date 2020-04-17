@@ -16,32 +16,28 @@ firebase.initializeApp({
 export class Firebase {
   private db: FirebaseFirestore.Firestore
 
-  constructor() {
+  constructor(private metricDate: string) {
     this.db = firebase.firestore()
   }
 
   async save(repoMetric: IRepoMetric): Promise<void> {
     const docRef = this.db.collection('repos').doc(repoMetric.name)
 
-    const calcDate = new Date()
-    calcDate.setDate(calcDate.getDate() - 1)
-    const metricDate = calcDate.toISOString().slice(0, 10)
-
     await docRef.set(
       {
         name: repoMetric.name,
         url: repoMetric.url,
-        forks: {[metricDate]: repoMetric.forks},
-        issues: {[metricDate]: repoMetric.issues},
-        stars: {[metricDate]: repoMetric.stars},
-        watchers: {[metricDate]: repoMetric.watchers},
-        pullRequests: {[metricDate]: repoMetric.pullRequests},
-        contributors: {[metricDate]: repoMetric.contributors},
-        commits: {[metricDate]: repoMetric.commits},
-        // totalViews: {[metricDate]: repoMetric.totalViews},
-        // uniqueViews: {[metricDate]: repoMetric.uniqueViews},
-        totalPullRequests: {[metricDate]: repoMetric.totalPullRequests},
-        totalIssues: {[metricDate]: repoMetric.totalIssues}
+        forks: {[this.metricDate]: repoMetric.forks},
+        issues: {[this.metricDate]: repoMetric.issues},
+        stars: {[this.metricDate]: repoMetric.stars},
+        watchers: {[this.metricDate]: repoMetric.watchers},
+        pullRequests: {[this.metricDate]: repoMetric.pullRequests},
+        contributors: {[this.metricDate]: repoMetric.contributors},
+        commits: {[this.metricDate]: repoMetric.commits},
+        // totalViews: {[this.metricDate]: repoMetric.totalViews},
+        // uniqueViews: {[this.metricDate]: repoMetric.uniqueViews},
+        totalPullRequests: {[this.metricDate]: repoMetric.totalPullRequests},
+        totalIssues: {[this.metricDate]: repoMetric.totalIssues}
       },
       {merge: true}
     )

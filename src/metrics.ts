@@ -1,19 +1,25 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
-import {IGraphQLResponse, IRepoMetric} from './interfaces'
+import {IRepoMetric} from './interfaces'
+import * as githubApi from './github-api'
 
 const githubToken: string = core.getInput('githubToken')
 const octokit: github.GitHub = new github.GitHub(githubToken)
 
 export class Metrics {
+  constructor(private metricDate: Date) {}
+
   async get(): Promise<IRepoMetric | undefined> {
     core.info('Retrieving repo metrics')
 
-    const repo = await this.getRepo()
-
-    const totals = await this.getRepoTotals()
-    const participation = await getParticipation(octokit)
-    // const traffic = await this.getTraffic()
+    const repo = await githubApi.getRepo(octokit, github.context)
+    const totals = await githubApi.getRepoTotals(octokit, github.context)
+    const participation = await githubApi.getParticipation(
+      octokit,
+      github.context,
+      this.metricDate
+    )
+    // const traffic = await githubApi.getTraffic(octokit, github.context)
 
     // Unless we've successfully gathered all metrics, don't
     // record metrics
@@ -47,96 +53,17 @@ export class Metrics {
         // uniqueViews: todaysViews.uniques,
         pullRequests: totals.repository.openPRs.totalCount,
         contributors: totals.repository.contributors.totalCount,
-        commits: participation?.all.reduce((p: number, c: number) => p + c),
+        commits: participation,
 
         totalPullRequests: prCount,
         totalIssues: issueCount
       }
 
-      core.info(JSON.stringify(repoMetric))
       core.info('Retrieving repo metrics complete')
 
       return repoMetric
     } else {
       return undefined
     }
-  }
-
-  private async getRepo(): Promise<any | undefined> {
-    try {
-      return (
-        await octokit.repos.get({
-          owner: github.context.repo.owner,
-          repo: github.context.repo.repo
-        })
-      ).data
-    } catch (err) {
-      core.error(`Error getting repo: ${err}`)
-      return undefined
-    }
-  }
-
-  private async getRepoTotals(): Promise<IGraphQLResponse | undefined> {
-    try {
-      const totals = await octokit.graphql(this.repoTotalsQuery)
-      return (totals as IGraphQLResponse) || undefined
-    } catch (err) {
-      core.error(`Error getting repo totals: ${err}`)
-      return undefined
-    }
-  }
-
-  private repoTotalsQuery = `
-  query {
-    repository(owner: "${github.context.repo.owner}", name:"${github.context.repo.repo}") {
-      openIssues: issues(states:OPEN) {
-        totalCount
-      }
-      closedIssues: issues(states:CLOSED) {
-        totalCount
-      }
-      openPRs: pullRequests(states:OPEN) {
-        totalCount
-      }
-      closedPRs: pullRequests(states:CLOSED) {
-        totalCount
-      }
-      mergedPRs: pullRequests(states:MERGED) {
-        totalCount
-      }
-      contributors: collaborators(affiliation:ALL) {
-        totalCount
-      }
-    }
-  }`
-
-  // private async getTraffic(): Promise<any | undefined> {
-  //   try {
-  //     return (
-  //       await this.octokit.repos.getViews({
-  //         owner: github.context.repo.owner,
-  //         repo: github.context.repo.repo
-  //       })
-  //     ).data
-  //   } catch (err) {
-  //     core.error(`Error getting traffic: ${err}`)
-  //     return undefined
-  //   }
-  // }
-}
-
-export const getParticipation = async (
-  octokit: any
-): Promise<any | undefined> => {
-  try {
-    return (
-      await octokit.repos.getParticipationStats({
-        owner: github.context.repo.owner,
-        repo: github.context.repo.repo
-      })
-    ).data
-  } catch (err) {
-    core.error(`Error getting participation: ${err}`)
-    return undefined
   }
 }
