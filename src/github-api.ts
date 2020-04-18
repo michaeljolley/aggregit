@@ -9,14 +9,15 @@ export const getParticipation = async (
   metricDate: Date
 ): Promise<number | undefined> => {
   try {
-    const commitStats = (
-      await octokit.repos.getCommitActivityStats({
-        owner: context.repo.owner,
-        repo: context.repo.repo
-      })
-    ).data
+    const resp = await octokit.repos.getCommitActivityStats({
+      owner: context.repo.owner,
+      repo: context.repo.repo
+    })
 
-    console.log(commitStats)
+    console.dir(resp)
+
+    const commitStats = resp.data
+
     const currentWeekStats = commitStats[commitStats.length - 1]
     const daysCommits = currentWeekStats.days[metricDate.getDay()]
 
