@@ -2,7 +2,6 @@ import {GitHub} from '@actions/github'
 import {Context} from '@actions/github/lib/context'
 import * as core from '@actions/core'
 import {IGraphQLResponse} from './interfaces'
-import {ReposGetResponse} from '@octokit/rest'
 
 export const getParticipation = async (
   octokit: GitHub,
@@ -30,7 +29,7 @@ export const getParticipation = async (
 export const getRepo = async (
   octokit: GitHub,
   context: Context
-): Promise<ReposGetResponse | undefined> => {
+): Promise<any | undefined> => {
   try {
     return (
       await octokit.repos.get({
