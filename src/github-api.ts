@@ -1,39 +1,30 @@
 import {GitHub} from '@actions/github'
 import {Context} from '@actions/github/lib/context'
 import * as core from '@actions/core'
-import * as axios from 'axios'
 import {IGraphQLResponse} from './interfaces'
 
-export const getParticipation = async (
-  octokit: GitHub,
-  context: Context,
-  metricDate: Date
-): Promise<number | undefined> => {
-  try {
-    // const resp = await octokit.repos.getCommitActivityStats({
-    //   owner: context.repo.owner,
-    //   repo: context.repo.repo
-    // })
+// export const getParticipation = async (
+//   octokit: GitHub,
+//   context: Context,
+//   metricDate: Date
+// ): Promise<number | undefined> => {
+//   try {
+//     const commitStats = (
+//       await octokit.repos.getCommitActivityStats({
+//         owner: context.repo.owner,
+//         repo: context.repo.repo
+//       })
+//     ).data
 
-    const resp = (
-      await axios.default.get(
-        `https://api.github.com/repos/${context.repo.owner}/${context.repo.repo}/stats/commit_activity`
-      )
-    ).data
+//     const currentWeekStats = commitStats[commitStats.length - 1]
+//     const daysCommits = currentWeekStats.days[metricDate.getDay()]
 
-    console.dir(resp)
-
-    const commitStats = resp.data
-
-    const currentWeekStats = commitStats[commitStats.length - 1]
-    const daysCommits = currentWeekStats.days[metricDate.getDay()]
-
-    return daysCommits
-  } catch (err) {
-    core.setFailed(`getParticipation: ${err}`)
-    return undefined
-  }
-}
+//     return daysCommits
+//   } catch (err) {
+//     core.setFailed(`getParticipation: ${err}`)
+//     return undefined
+//   }
+// }
 
 export const getRepo = async (
   octokit: GitHub,

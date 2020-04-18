@@ -18,7 +18,6 @@
   "dependencies": {
     "@actions/core": "^1.2.1",
     "@actions/github": "^2.0.1",
-    "axios": "^0.19.2",
     "firebase-admin": "^8.10.0"
   },
   "devDependencies": {

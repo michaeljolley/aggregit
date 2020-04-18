@@ -40,17 +40,17 @@ describe('Metrics', () => {
 
       expect(result).toBeUndefined()
     })
-    it(`Returns undefined on unsuccessful participation retrieval`, async () => {
-      nockSeeds.nockRepoGood()
-      nockSeeds.nockParticipationBad()
-      nockSeeds.nockRepoTotalsGood()
+    // it(`Returns undefined on unsuccessful participation retrieval`, async () => {
+    //   nockSeeds.nockRepoGood()
+    //   nockSeeds.nockParticipationBad()
+    //   nockSeeds.nockRepoTotalsGood()
 
-      const metrics = new Metrics(new Date(`${metricDate}T00:00:00Z`))
+    //   const metrics = new Metrics(new Date(`${metricDate}T00:00:00Z`))
 
-      const result = await metrics.get()
+    //   const result = await metrics.get()
 
-      expect(result).toBeUndefined()
-    })
+    //   expect(result).toBeUndefined()
+    // })
     it(`Returns undefined on unsuccessful repo totals retrieval`, async () => {
       nockSeeds.nockRepoGood()
       nockSeeds.nockParticipationGood()

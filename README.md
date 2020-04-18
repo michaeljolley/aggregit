@@ -46,10 +46,6 @@ The following schema represents the data that will be saved for each repo docume
 {
     name: 'repoName',
     url: 'https://github.com/owner/repoName',
-    commits: {
-        '2020-04-14': 4,
-        '2020-04-15': 3
-    },
     contributors:  {
         '2020-04-14': 4,
         '2020-04-15': 3

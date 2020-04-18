@@ -33,7 +33,7 @@ export class Firebase {
         watchers: {[this.metricDate]: repoMetric.watchers},
         pullRequests: {[this.metricDate]: repoMetric.pullRequests},
         contributors: {[this.metricDate]: repoMetric.contributors},
-        commits: {[this.metricDate]: repoMetric.commits},
+        // commits: {[this.metricDate]: repoMetric.commits},
         // totalViews: {[this.metricDate]: repoMetric.totalViews},
         // uniqueViews: {[this.metricDate]: repoMetric.uniqueViews},
         totalPullRequests: {[this.metricDate]: repoMetric.totalPullRequests},

@@ -8,7 +8,7 @@ export interface IRepoMetric {
   watchers: number
   pullRequests: number
   contributors: number
-  commits: number
+  // commits: number
 
   // totalViews: number
   // uniqueViews: number
