@@ -1,6 +1,7 @@
 import {GitHub} from '@actions/github'
 import {Context} from '@actions/github/lib/context'
 import * as core from '@actions/core'
+import * as axios from 'axios'
 import {IGraphQLResponse} from './interfaces'
 
 export const getParticipation = async (
@@ -9,10 +10,16 @@ export const getParticipation = async (
   metricDate: Date
 ): Promise<number | undefined> => {
   try {
-    const resp = await octokit.repos.getCommitActivityStats({
-      owner: context.repo.owner,
-      repo: context.repo.repo
-    })
+    // const resp = await octokit.repos.getCommitActivityStats({
+    //   owner: context.repo.owner,
+    //   repo: context.repo.repo
+    // })
+
+    const resp = (
+      await axios.default.get(
+        `https://api.github.com/repos/${context.repo.owner}/${context.repo.repo}/stats/commit_activity`
+      )
+    ).data
 
     console.dir(resp)
 
