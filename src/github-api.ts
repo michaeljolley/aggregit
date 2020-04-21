@@ -3,6 +3,8 @@ import {Context} from '@actions/github/lib/context'
 import * as core from '@actions/core'
 import {IGraphQLResponse} from './interfaces'
 
+import * as axios from 'axios'
+
 // export const getParticipation = async (
 //   octokit: GitHub,
 //   context: Context,
@@ -80,15 +82,21 @@ export const getRepoTotals = async (
   }
 }
 
-export const getTraffic = async (
-  octokit: GitHub,
-  context: Context
-): Promise<any | undefined> => {
+export const getTraffic = async (): // octokit: GitHub,
+// context: Context
+Promise<any | undefined> => {
   try {
-    var x = await octokit.repos.getViews({
-      owner: context.repo.owner,
-      repo: context.repo.repo
+    const pat = core.getInput('gh_pat')
+    const x = await axios.default.get('', {
+      headers: {
+        authorization: `token ${pat}`
+      }
     })
+
+    // await octokit.repos.getViews({
+    //   owner: context.repo.owner,
+    //   repo: context.repo.repo
+    // })
 
     core.info(JSON.stringify(x))
     return x

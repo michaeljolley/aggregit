@@ -20,9 +20,7 @@ export class Metrics {
     //   this.metricDate
     // )
 
-    const tfOctokit = new github.GitHub(core.getInput('gh_pat'))
-
-    const traffic = await githubApi.getTraffic(tfOctokit, github.context)
+    const traffic = await githubApi.getTraffic() //tfOctokit, github.context)
     core.info(traffic)
     // Unless we've successfully gathered all metrics, don't
     // record metrics
