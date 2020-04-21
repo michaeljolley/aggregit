@@ -87,11 +87,14 @@ export const getTraffic = async (): // octokit: GitHub,
 Promise<any | undefined> => {
   try {
     const pat = core.getInput('gh_pat')
-    const x = await axios.default.get('', {
-      headers: {
-        authorization: `token ${pat}`
+    const x = await axios.default.get(
+      'https://api.github.com/repos/michaeljolley/aggregit/traffic/views',
+      {
+        headers: {
+          authorization: `token ${pat}`
+        }
       }
-    })
+    )
 
     // await octokit.repos.getViews({
     //   owner: context.repo.owner,
