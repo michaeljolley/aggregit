@@ -85,12 +85,13 @@ export const getTraffic = async (
   context: Context
 ): Promise<any | undefined> => {
   try {
-    return (
-      await octokit.repos.getViews({
-        owner: context.repo.owner,
-        repo: context.repo.repo
-      })
-    ).data
+    var x = await octokit.repos.getViews({
+      owner: context.repo.owner,
+      repo: context.repo.repo
+    })
+
+    core.info(JSON.stringify(x))
+    return x
   } catch (err) {
     core.error(`Error getting traffic: ${err}`)
     return undefined
