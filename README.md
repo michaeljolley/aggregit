@@ -1,5 +1,7 @@
 # aggregit
 
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](code_of_conduct.md)
+
 This action gathers metrics about the repository and loads them to a Firebase database that you specify.
 
 > Repo metrics will be saved into a collection named `repos`.
