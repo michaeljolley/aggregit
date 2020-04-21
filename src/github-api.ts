@@ -91,7 +91,7 @@ Promise<any | undefined> => {
       'https://api.github.com/repos/michaeljolley/aggregit/traffic/views',
       {
         headers: {
-          authorization: `token ${pat}`
+          Authorization: `token ${pat}`
         }
       }
     )
