@@ -19,8 +19,11 @@ export class Metrics {
     //   github.context,
     //   this.metricDate
     // )
-    // const traffic = await githubApi.getTraffic(octokit, github.context)
 
+    const tfOctokit = new github.GitHub(core.getInput('gh_pat'))
+
+    const traffic = await githubApi.getTraffic(tfOctokit, github.context)
+    core.info(traffic)
     // Unless we've successfully gathered all metrics, don't
     // record metrics
     if (repo && totals) {
@@ -33,13 +36,13 @@ export class Metrics {
         totals.repository.openIssues.totalCount +
         totals.repository.closedIssues.totalCount
 
-      // const todaysViews =
-      //   traffic.views.length > 0
-      //     ? traffic.views[traffic.views.length - 1]
-      //     : {
-      //         count: 0,
-      //         uniques: 0
-      //       }
+      const todaysViews =
+        traffic.views.length > 0
+          ? traffic.views[traffic.views.length - 1]
+          : {
+              count: 0,
+              uniques: 0
+            }
 
       const repoMetric: IRepoMetric = {
         name: github.context.repo.repo,
@@ -49,8 +52,8 @@ export class Metrics {
         forks: repo.forks_count,
         stars: repo.stargazers_count,
         watchers: repo.watchers_count,
-        // totalViews: todaysViews.count,
-        // uniqueViews: todaysViews.uniques,
+        totalViews: todaysViews.count,
+        uniqueViews: todaysViews.uniques,
         pullRequests: totals.repository.openPRs.totalCount,
         contributors: totals.repository.contributors.totalCount,
         // commits: participation,

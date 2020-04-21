@@ -80,19 +80,19 @@ export const getRepoTotals = async (
   }
 }
 
-// export const getTraffic = async (
-//   octokit: GitHub,
-//   context: Context
-// ): Promise<any | undefined> => {
-//   try {
-//     return (
-//       await octokit.repos.getViews({
-//         owner: context.repo.owner,
-//         repo: context.repo.repo
-//       })
-//     ).data
-//   } catch (err) {
-//     core.error(`Error getting traffic: ${err}`)
-//     return undefined
-//   }
-// }
+export const getTraffic = async (
+  octokit: GitHub,
+  context: Context
+): Promise<any | undefined> => {
+  try {
+    return (
+      await octokit.repos.getViews({
+        owner: context.repo.owner,
+        repo: context.repo.repo
+      })
+    ).data
+  } catch (err) {
+    core.error(`Error getting traffic: ${err}`)
+    return undefined
+  }
+}
