@@ -33,11 +33,25 @@ export class Firebase {
         watchers: {[this.metricDate]: repoMetric.watchers},
         pullRequests: {[this.metricDate]: repoMetric.pullRequests},
         contributors: {[this.metricDate]: repoMetric.contributors},
+        totalPullRequests: {[this.metricDate]: repoMetric.totalPullRequests},
+        totalIssues: {[this.metricDate]: repoMetric.totalIssues},
+        healthPercentage: {[this.metricDate]: repoMetric.healthPercentage},
         // commits: {[this.metricDate]: repoMetric.commits},
         // totalViews: {[this.metricDate]: repoMetric.totalViews},
         // uniqueViews: {[this.metricDate]: repoMetric.uniqueViews},
-        totalPullRequests: {[this.metricDate]: repoMetric.totalPullRequests},
-        totalIssues: {[this.metricDate]: repoMetric.totalIssues}
+
+        codeOfConductExists: {
+          [this.metricDate]: repoMetric.codeOfConductExists
+        },
+        contributingExists: {[this.metricDate]: repoMetric.contributingExists},
+        issueTemplateExists: {
+          [this.metricDate]: repoMetric.issueTemplateExists
+        },
+        pullRequestTemplateExists: {
+          [this.metricDate]: repoMetric.pullRequestTemplateExists
+        },
+        licenseExists: {[this.metricDate]: repoMetric.licenseExists},
+        readMeExists: {[this.metricDate]: repoMetric.readMeExists}
       },
       {merge: true}
     )

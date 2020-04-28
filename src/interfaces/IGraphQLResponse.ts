@@ -9,8 +9,20 @@ interface IGraphQLRepository {
   closedPRs: IGraphQLCounter
   mergedPRs: IGraphQLCounter
   contributors: IGraphQLCounter
+  healthPercentage: IGraphQLCounter
+
+  codeOfConductExists: IGraphQLBoolean
+  contributingExists: IGraphQLBoolean
+  issueTemplateExists: IGraphQLBoolean
+  pullRequestTemplateExists: IGraphQLBoolean
+  licenseExists: IGraphQLBoolean
+  readMeExists: IGraphQLBoolean
 }
 
 interface IGraphQLCounter {
   totalCount: number
+}
+
+interface IGraphQLBoolean {
+  exists: boolean
 }

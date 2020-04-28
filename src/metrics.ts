@@ -14,6 +14,7 @@ export class Metrics {
 
     const repo = await githubApi.getRepo(octokit, github.context)
     const totals = await githubApi.getRepoTotals(octokit, github.context)
+    const community = await githubApi.getCommunity(octokit, github.context)
     // const participation = await githubApi.getParticipation(
     //   octokit,
     //   github.context,
@@ -23,7 +24,7 @@ export class Metrics {
 
     // Unless we've successfully gathered all metrics, don't
     // record metrics
-    if (repo && totals) {
+    if (repo && totals && community) {
       //  && participation && traffic
       const prCount =
         totals.repository.closedPRs.totalCount +
@@ -49,14 +50,23 @@ export class Metrics {
         forks: repo.forks_count,
         stars: repo.stargazers_count,
         watchers: repo.watchers_count,
-        // totalViews: todaysViews.count,
-        // uniqueViews: todaysViews.uniques,
         pullRequests: totals.repository.openPRs.totalCount,
         contributors: totals.repository.contributors.totalCount,
-        // commits: participation,
-
+        healthPercentage: community.health_percentage,
         totalPullRequests: prCount,
-        totalIssues: issueCount
+        totalIssues: issueCount,
+        // commits: participation,
+        // totalViews: todaysViews.count,
+        // uniqueViews: todaysViews.uniques,
+
+        codeOfConductExists: community.files.code_of_conduct ? true : false,
+        contributingExists: community.files.contributing ? true : false,
+        issueTemplateExists: community.files.issue_template ? true : false,
+        pullRequestTemplateExists: community.files.pull_request_template
+          ? true
+          : false,
+        licenseExists: community.files.license ? true : false,
+        readMeExists: community.files.readme ? true : false
       }
 
       core.info('Retrieving repo metrics complete')

@@ -8,11 +8,17 @@ export interface IRepoMetric {
   watchers: number
   pullRequests: number
   contributors: number
+  totalPullRequests: number
+  totalIssues: number
+  healthPercentage: number
   // commits: number
-
   // totalViews: number
   // uniqueViews: number
 
-  totalPullRequests: number
-  totalIssues: number
+  codeOfConductExists: boolean
+  contributingExists: boolean
+  issueTemplateExists: boolean
+  pullRequestTemplateExists: boolean
+  licenseExists: boolean
+  readMeExists: boolean
 }
