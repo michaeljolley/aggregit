@@ -33,6 +33,7 @@ describe('Metrics', () => {
       nockSeeds.nockRepoBad()
       nockSeeds.nockParticipationGood()
       nockSeeds.nockRepoTotalsGood()
+      nockSeeds.nockCommunityGood()
 
       const metrics = new Metrics(new Date(`${metricDate}T00:00:00Z`))
 
@@ -55,6 +56,19 @@ describe('Metrics', () => {
       nockSeeds.nockRepoGood()
       nockSeeds.nockParticipationGood()
       nockSeeds.nockRepoTotalsBad()
+      nockSeeds.nockCommunityGood()
+
+      const metrics = new Metrics(new Date(`${metricDate}T00:00:00Z`))
+
+      const result = await metrics.get()
+
+      expect(result).toBeUndefined()
+    })
+    it(`Returns undefined on unsuccessful community profile retrieval`, async () => {
+      nockSeeds.nockRepoGood()
+      nockSeeds.nockParticipationGood()
+      nockSeeds.nockRepoTotalsGood()
+      nockSeeds.nockCommunityBad()
 
       const metrics = new Metrics(new Date(`${metricDate}T00:00:00Z`))
 
@@ -66,6 +80,7 @@ describe('Metrics', () => {
       nockSeeds.nockRepoGood()
       nockSeeds.nockParticipationGood()
       nockSeeds.nockRepoTotalsGood()
+      nockSeeds.nockCommunityGood()
 
       const metrics = new Metrics(new Date(`${metricDate}T00:00:00Z`))
 

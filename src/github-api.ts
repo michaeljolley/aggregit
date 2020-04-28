@@ -80,6 +80,28 @@ export const getRepoTotals = async (
   }
 }
 
+export const getCommunity = async (
+  octokit: GitHub,
+  context: Context
+): Promise<any | undefined> => {
+  try {
+    return (
+      await octokit.repos.retrieveCommunityProfileMetrics({
+        owner: context.repo.owner,
+        repo: context.repo.repo,
+        request: {
+          headers: {
+            accept: 'application/vnd.github.black-panther-preview+json'
+          }
+        }
+      })
+    ).data
+  } catch (err) {
+    core.error(`Error getting community: ${err}`)
+    return undefined
+  }
+}
+
 // export const getTraffic = async (
 //   octokit: GitHub,
 //   context: Context
