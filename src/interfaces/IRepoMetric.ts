@@ -1,6 +1,7 @@
 export interface IRepoMetric {
   name: string
   url: string
+  isFork: boolean
 
   issues: number
   forks: number

@@ -13,6 +13,10 @@ export class Metrics {
     core.info('Retrieving repo metrics')
 
     const repo = await githubApi.getRepo(octokit, github.context)
+    if (repo.fork) {
+      tools.exit.success('Action does not run on forks')
+    }
+
     const totals = await githubApi.getRepoTotals(octokit, github.context)
     const community = await githubApi.getCommunity(octokit, github.context)
     // const participation = await githubApi.getParticipation(
