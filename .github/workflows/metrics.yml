@@ -1,6 +1,6 @@
 name: Aggregit
 
-on: [issue]
+on: [issues]
 
 jobs:
   recordMetrics:
