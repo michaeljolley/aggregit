@@ -1,12 +1,14 @@
 name: Aggregit
 
-on: [issues]
+on:
+  schedule:
+    - cron: "*/5 * * * *"
 
 jobs:
   recordMetrics:
     runs-on: ubuntu-latest
     steps:
-    - uses: michaeljolley/aggregit@master
+    - uses: michaeljolley/aggregit@no-forks
       with:
         githubToken: ${{ secrets.GITHUB_TOKEN }}
         project_id: ${{ secrets.project_id }}
