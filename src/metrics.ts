@@ -65,8 +65,12 @@ export class Metrics {
 
         core.info('Retrieving repo metrics complete')
       }
+      else {
+        return undefined
+      }
     } catch (err) {
       core.setFailed(err)
+      return undefined
     }
 
     return repoMetric

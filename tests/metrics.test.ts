@@ -1,19 +1,21 @@
 import * as nock from 'nock'
 import * as mockedEnv from 'mocked-env'
-import {Toolkit} from 'actions-toolkit'
+import * as github from '@actions/github'
 nock.disableNetConnect()
 
 import {mergeCommitSha, metricDate} from './index'
 import * as nockSeeds from './nock'
-
 import {Metrics} from '../src/metrics'
+import { IRepoMetric } from '../src/interfaces'
+
+const fakeOctokit = new github.GitHub('')
+const fakeRepoMetric: IRepoMetric = {
+  name: 'test-repo',
+  url: 'test-repo'
+}
 
 describe('Metrics', () => {
   let restore: any
-  let action, tools: Toolkit
-  
-  // Mock Toolkit.run to define `action` so we can call it
-  Toolkit.run = jest.fn((actionFn) => { action = actionFn })
 
   beforeEach(() => {
     restore = mockedEnv.default({
@@ -26,13 +28,6 @@ describe('Metrics', () => {
       GITHUB_EVENT_NAME: '',
       GITHUB_EVENT_PATH: ''
     })
-    tools = new Toolkit()
-      // Mock methods on it!
-      tools.exit.success = jest.fn()
-      tools.exit.failure = jest.fn()
-      tools.log.info = jest.fn()
-      tools.log.pending = jest.fn()
-      tools.log.complete = jest.fn()
   })
 
   afterEach(() => {
@@ -41,30 +36,6 @@ describe('Metrics', () => {
   })
 
   describe('get', () => {
-    it(`Returns undefined on unsuccessful repo retrieval`, async () => {
-      nockSeeds.nockRepoBad()
-      nockSeeds.nockParticipationGood()
-      nockSeeds.nockRepoTotalsGood()
-      nockSeeds.nockCommunityGood()
-
-      const metrics = new Metrics(new Date(`${metricDate}T00:00:00Z`))
-
-      const result = await metrics.get()
-
-      expect(result).toBeUndefined()
-    })
-    it(`Exits the action if repo is a fork`, async () => {
-      nockSeeds.nockRepoGoodFork()
-      nockSeeds.nockParticipationGood()
-      nockSeeds.nockRepoTotalsGood()
-      nockSeeds.nockCommunityGood()
-
-      const metrics = new Metrics(new Date(`${metricDate}T00:00:00Z`))
-
-      const result = await metrics.get()
-
-      expect(result).toBeUndefined()
-    })
     // it(`Returns undefined on unsuccessful participation retrieval`, async () => {
     //   nockSeeds.nockRepoGood()
     //   nockSeeds.nockParticipationBad()
@@ -84,7 +55,7 @@ describe('Metrics', () => {
 
       const metrics = new Metrics(new Date(`${metricDate}T00:00:00Z`))
 
-      const result = await metrics.get()
+      const result = await metrics.get(fakeOctokit, fakeRepoMetric)
 
       expect(result).toBeUndefined()
     })
@@ -96,7 +67,7 @@ describe('Metrics', () => {
 
       const metrics = new Metrics(new Date(`${metricDate}T00:00:00Z`))
 
-      const result = await metrics.get()
+      const result = await metrics.get(fakeOctokit, fakeRepoMetric)
 
       expect(result).toBeUndefined()
     })
@@ -108,7 +79,7 @@ describe('Metrics', () => {
 
       const metrics = new Metrics(new Date(`${metricDate}T00:00:00Z`))
 
-      const result = await metrics.get()
+      const result = await metrics.get(fakeOctokit, fakeRepoMetric)
 
       expect(result).not.toBeUndefined()
       if (result) {
