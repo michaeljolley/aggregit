@@ -16,7 +16,7 @@ const run = async (): Promise<void> => {
     // triggered the action was not 'schedule'
    // ActionGuard('schedule')
 
-    console.dir(github.context.payload)
+    console.dir(github.context)
 
     // const metrics = new Metrics(new Date(`${metricDate}T00:00:00Z`))
     // const repoMetric: IRepoMetric | undefined = await metrics.get()
