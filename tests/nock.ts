@@ -36,7 +36,18 @@ export const nockRepoGood = (): void => {
     .get('/repos/michaeljolley/test-repo')
     .reply(200, {
       id: 1111111,
-      name: 'test-repo'
+      name: 'test-repo',
+      fork: false
+    })
+}
+export const nockRepoGoodFork = (): void => {
+  nock
+    .default('https://api.github.com')
+    .get('/repos/michaeljolley/test-repo')
+    .reply(200, {
+      id: 1111111,
+      name: 'test-repo',
+      fork: true
     })
 }
 export const nockCommunityBad = (): void => {

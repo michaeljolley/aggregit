@@ -1,11 +1,18 @@
 import * as nock from 'nock'
 import * as mockedEnv from 'mocked-env'
+import * as github from '@actions/github'
 nock.disableNetConnect()
 
 import {mergeCommitSha, metricDate} from './index'
 import * as nockSeeds from './nock'
-
 import {Metrics} from '../src/metrics'
+import { IRepoMetric } from '../src/interfaces'
+
+const fakeOctokit = new github.GitHub('')
+const fakeRepoMetric: IRepoMetric = {
+  name: 'test-repo',
+  url: 'test-repo'
+}
 
 describe('Metrics', () => {
   let restore: any
@@ -29,18 +36,6 @@ describe('Metrics', () => {
   })
 
   describe('get', () => {
-    it(`Returns undefined on unsuccessful repo retrieval`, async () => {
-      nockSeeds.nockRepoBad()
-      nockSeeds.nockParticipationGood()
-      nockSeeds.nockRepoTotalsGood()
-      nockSeeds.nockCommunityGood()
-
-      const metrics = new Metrics(new Date(`${metricDate}T00:00:00Z`))
-
-      const result = await metrics.get()
-
-      expect(result).toBeUndefined()
-    })
     // it(`Returns undefined on unsuccessful participation retrieval`, async () => {
     //   nockSeeds.nockRepoGood()
     //   nockSeeds.nockParticipationBad()
@@ -60,7 +55,7 @@ describe('Metrics', () => {
 
       const metrics = new Metrics(new Date(`${metricDate}T00:00:00Z`))
 
-      const result = await metrics.get()
+      const result = await metrics.get(fakeOctokit, fakeRepoMetric)
 
       expect(result).toBeUndefined()
     })
@@ -72,7 +67,7 @@ describe('Metrics', () => {
 
       const metrics = new Metrics(new Date(`${metricDate}T00:00:00Z`))
 
-      const result = await metrics.get()
+      const result = await metrics.get(fakeOctokit, fakeRepoMetric)
 
       expect(result).toBeUndefined()
     })
@@ -84,7 +79,7 @@ describe('Metrics', () => {
 
       const metrics = new Metrics(new Date(`${metricDate}T00:00:00Z`))
 
-      const result = await metrics.get()
+      const result = await metrics.get(fakeOctokit, fakeRepoMetric)
 
       expect(result).not.toBeUndefined()
       if (result) {

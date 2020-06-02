@@ -1,6 +1,6 @@
+import * as core from '@actions/core'
 import {GitHub} from '@actions/github'
 import {Context} from '@actions/github/lib/context'
-import * as core from '@actions/core'
 import {IGraphQLResponse} from './interfaces'
 
 // export const getParticipation = async (
