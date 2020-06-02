@@ -1,6 +1,6 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
-import {ActionGuard} from 'action-guard'
+const guard = require('action-guard')
 
 // import {IRepoMetric} from './interfaces/IRepoMetric'
 // import {Metrics} from './metrics'
@@ -14,7 +14,7 @@ const run = async (): Promise<void> => {
   try {
     // ActionGuard will throw an exception if the event that
     // triggered the action was not 'schedule'
-    ActionGuard('schedule')
+    guard('schedule')
 
     console.dir(github.context)
 
