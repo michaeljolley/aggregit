@@ -2,10 +2,12 @@ import * as github from '@actions/github'
 import * as nock from 'nock'
 import * as mockedEnv from 'mocked-env'
 
-import {mergeCommitSha, metricDate} from './index'
+import {mergeCommitSha} from './index'
 import * as nockSeeds from './nock'
 
-import {getRepo, getRepoTotals} from '../src/github-api'
+import {getCommunity, getParticipation, getRepo, getRepoTotals} from '../src/github-api'
+
+const metricDate = new Date(2020,6,15,0,0,0,0).toISOString().slice(0, 10)
 
 describe('GitHub API', () => {
   let restore: any
@@ -28,34 +30,34 @@ describe('GitHub API', () => {
     nock.cleanAll()
   })
 
-  // describe('getParticipation', () => {
-  //   it(`Returns undefined on error`, async () => {
-  //     nockSeeds.nockParticipationBad()
+  describe('getParticipation', () => {
+    it(`Returns undefined on error`, async () => {
+      nockSeeds.nockParticipationBad()
 
-  //     const fakeOctokit = new github.GitHub('')
+      const fakeOctokit = new github.GitHub('')
 
-  //     const result = await getParticipation(
-  //       fakeOctokit,
-  //       github.context,
-  //       new Date(metricDate)
-  //     )
+      const result = await getParticipation(
+        fakeOctokit,
+        github.context,
+        new Date(metricDate)
+      )
 
-  //     expect(result).toBeUndefined()
-  //   })
-  //   it(`Returns correct value based on day of week`, async () => {
-  //     nockSeeds.nockParticipationGood()
+      expect(result).toBeUndefined()
+    })
+    it(`Returns correct value based on day of week`, async () => {
+      nockSeeds.nockParticipationGood()
 
-  //     const fakeOctokit = new github.GitHub('')
+      const fakeOctokit = new github.GitHub('')
 
-  //     const result = await getParticipation(
-  //       fakeOctokit,
-  //       github.context,
-  //       new Date(`${metricDate}T00:00:00Z`)
-  //     )
+      const result = await getParticipation(
+        fakeOctokit,
+        github.context,
+        new Date(`${metricDate}T00:00:00Z`)
+      )
 
-  //     expect(result).toEqual(10)
-  //   })
-  // })
+      expect(result).toEqual(10)
+    })
+  })
   describe('getRepo', () => {
     it(`Returns undefined on error`, async () => {
       nockSeeds.nockRepoBad()
@@ -76,6 +78,53 @@ describe('GitHub API', () => {
       expect(result).not.toBeUndefined()
       if (result) {
         expect(result.name).toBe(github.context.repo.repo)
+      }
+    })
+  })
+  describe('getRepoTotals', () => {
+    it(`Returns undefined on error`, async () => {
+      nockSeeds.nockRepoTotalsBad()
+
+      const fakeOctokit = new github.GitHub('')
+
+      const result = await getRepoTotals(fakeOctokit, github.context)
+
+      expect(result).toBeUndefined()
+    })
+    it(`Returns repo stats on success`, async () => {
+      nockSeeds.nockRepoTotalsGood()
+
+      const fakeOctokit = new github.GitHub('')
+
+      const result = await getRepoTotals(fakeOctokit, github.context)
+
+      expect(result).not.toBeUndefined()
+      if (result) {
+        expect(result.repository.mergedPRs.totalCount).toEqual(5)
+      }
+    })
+  })
+
+  describe('getCommunity', () => {
+    it(`Returns undefined on error`, async () => {
+      nockSeeds.nockCommunityBad()
+
+      const fakeOctokit = new github.GitHub('')
+
+      const result = await getCommunity(fakeOctokit, github.context)
+
+      expect(result).toBeUndefined()
+    })
+    it(`Returns community on success`, async () => {
+      nockSeeds.nockCommunityGood()
+
+      const fakeOctokit = new github.GitHub('')
+
+      const result = await getCommunity(fakeOctokit, github.context)
+      expect(result).not.toBeUndefined()
+      if (result) {
+        expect(result.files.code_of_conduct).not.toBeUndefined()
+        expect(result.files.pull_request_template).toBeNull()
       }
     })
   })

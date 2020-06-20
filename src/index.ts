@@ -1,8 +1,14 @@
 import * as core from '@actions/core'
-import {IRepoMetric} from './interfaces/IRepoMetric'
-
+import * as github from '@actions/github'
+import * as githubApi from './github-api'
+import {IRepoMetric} from './interfaces'
 import {Metrics} from './metrics'
 import {Firebase} from './firebase'
+
+const guard = require('action-guard')
+
+const githubToken: string = core.getInput('githubToken')
+const octokit: github.GitHub = new github.GitHub(githubToken)
 
 const calcDate = new Date()
 calcDate.setDate(calcDate.getDate() - 1)
@@ -10,16 +16,30 @@ export const metricDate = calcDate.toISOString().slice(0, 10)
 
 const run = async (): Promise<void> => {
   try {
-    const metrics = new Metrics(new Date(`${metricDate}T00:00:00Z`))
-    const repoMetric: IRepoMetric | undefined = await metrics.get()
+    // ActionGuard will throw an exception if the event that
+    // triggered the action was not 'schedule'
+    guard('schedule')
 
-    if (repoMetric) {
-      const db = new Firebase(metricDate)
-      await db.save(repoMetric)
-    } else {
-      core.error('Unable to gather all metrics')
-      core.ExitCode.Failure
+    const repo = await githubApi.getRepo(octokit, github.context)
+    // If this is a fork, exit.
+    if (repo.fork) {
+      return
     }
+
+    let repoMetric: IRepoMetric = {
+      name: github.context.repo.repo,
+      url: repo.html_url,
+      issues: repo.open_issues_count,
+      forks: repo.forks_count,
+      stars: repo.stargazers_count,
+      watchers: repo.watchers_count
+    }
+
+    const metrics = new Metrics(new Date(`${metricDate}T00:00:00Z`))
+    await metrics.get(octokit, repoMetric)
+
+    const db = new Firebase(metricDate)
+    await db.save(repoMetric)
   } catch (err) {
     core.error(err)
   }

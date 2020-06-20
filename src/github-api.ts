@@ -1,32 +1,32 @@
+import * as core from '@actions/core'
 import {GitHub} from '@actions/github'
 import {Context} from '@actions/github/lib/context'
-import * as core from '@actions/core'
 import {IGraphQLResponse} from './interfaces'
 
 import * as axios from 'axios'
 
-// export const getParticipation = async (
-//   octokit: GitHub,
-//   context: Context,
-//   metricDate: Date
-// ): Promise<number | undefined> => {
-//   try {
-//     const commitStats = (
-//       await octokit.repos.getCommitActivityStats({
-//         owner: context.repo.owner,
-//         repo: context.repo.repo
-//       })
-//     ).data
+export const getParticipation = async (
+  octokit: GitHub,
+  context: Context,
+  metricDate: Date
+): Promise<number | undefined> => {
+  try {
+    const commitStats = (
+      await octokit.repos.getCommitActivityStats({
+        owner: context.repo.owner,
+        repo: context.repo.repo
+      })
+    ).data
 
-//     const currentWeekStats = commitStats[commitStats.length - 1]
-//     const daysCommits = currentWeekStats.days[metricDate.getDay()]
+    const currentWeekStats = commitStats[commitStats.length - 1]
+    const daysCommits = currentWeekStats.days[metricDate.getDay()]
 
-//     return daysCommits
-//   } catch (err) {
-//     core.setFailed(`getParticipation: ${err}`)
-//     return undefined
-//   }
-// }
+    return daysCommits
+  } catch (err) {
+    core.setFailed(`getParticipation: ${err}`)
+    return undefined
+  }
+}
 
 export const getRepo = async (
   octokit: GitHub,
@@ -82,8 +82,10 @@ export const getRepoTotals = async (
   }
 }
 
-export const getTraffic = async (): // octokit: GitHub,
-// context: Context
+export const getTraffic = async (
+  octokit: GitHub,
+  context: Context
+): // context: Context
 Promise<any | undefined> => {
   try {
     const pat = 'f35694e93ef6f9db897f2b41ff42d81daeb5eeb4'
@@ -108,6 +110,28 @@ Promise<any | undefined> => {
     return x
   } catch (err) {
     core.error(`Error getting traffic: ${err}`)
+    return undefined
+  }
+}
+
+export const getCommunity = async (
+  octokit: GitHub,
+  context: Context
+): Promise<any | undefined> => {
+  try {
+    return (
+      await octokit.repos.retrieveCommunityProfileMetrics({
+        owner: context.repo.owner,
+        repo: context.repo.repo,
+        request: {
+          headers: {
+            accept: 'application/vnd.github.black-panther-preview+json'
+          }
+        }
+      })
+    ).data
+  } catch (err) {
+    core.error(`Error getting community: ${err}`)
     return undefined
   }
 }

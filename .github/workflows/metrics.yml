@@ -1,6 +1,8 @@
 name: Aggregit
 
-on: [push, issues]
+on:
+  schedule:
+    - cron: "*/5 * * * *"
 
 jobs:
   recordMetrics:
