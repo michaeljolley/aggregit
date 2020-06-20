@@ -2,7 +2,7 @@ name: Aggregit
 
 on:
   schedule:
-    - cron: "/4 * * * *"
+    - cron: "/5 * * * *"
 
 jobs:
   recordMetrics:
