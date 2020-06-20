@@ -5,7 +5,9 @@ import * as mockedEnv from 'mocked-env'
 import {mergeCommitSha} from './index'
 import * as nockSeeds from './nock'
 
-import {getCommunity, getRepo, getRepoTotals} from '../src/github-api'
+import {getCommunity, getParticipation, getRepo, getRepoTotals} from '../src/github-api'
+
+const metricDate = new Date(2020,6,15,0,0,0,0).toISOString().slice(0, 10)
 
 describe('GitHub API', () => {
   let restore: any
@@ -28,34 +30,34 @@ describe('GitHub API', () => {
     nock.cleanAll()
   })
 
-  // describe('getParticipation', () => {
-  //   it(`Returns undefined on error`, async () => {
-  //     nockSeeds.nockParticipationBad()
+  describe('getParticipation', () => {
+    it(`Returns undefined on error`, async () => {
+      nockSeeds.nockParticipationBad()
 
-  //     const fakeOctokit = new github.GitHub('')
+      const fakeOctokit = new github.GitHub('')
 
-  //     const result = await getParticipation(
-  //       fakeOctokit,
-  //       github.context,
-  //       new Date(metricDate)
-  //     )
+      const result = await getParticipation(
+        fakeOctokit,
+        github.context,
+        new Date(metricDate)
+      )
 
-  //     expect(result).toBeUndefined()
-  //   })
-  //   it(`Returns correct value based on day of week`, async () => {
-  //     nockSeeds.nockParticipationGood()
+      expect(result).toBeUndefined()
+    })
+    it(`Returns correct value based on day of week`, async () => {
+      nockSeeds.nockParticipationGood()
 
-  //     const fakeOctokit = new github.GitHub('')
+      const fakeOctokit = new github.GitHub('')
 
-  //     const result = await getParticipation(
-  //       fakeOctokit,
-  //       github.context,
-  //       new Date(`${metricDate}T00:00:00Z`)
-  //     )
+      const result = await getParticipation(
+        fakeOctokit,
+        github.context,
+        new Date(`${metricDate}T00:00:00Z`)
+      )
 
-  //     expect(result).toEqual(10)
-  //   })
-  // })
+      expect(result).toEqual(10)
+    })
+  })
   describe('getRepo', () => {
     it(`Returns undefined on error`, async () => {
       nockSeeds.nockRepoBad()

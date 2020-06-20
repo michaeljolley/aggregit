@@ -84,6 +84,10 @@ The following schema represents the data that will be saved for each repo docume
         '2020-04-14': 64,
         '2020-04-15': 83
     },
+    commits: {
+        '2020-04-14': 4,
+        '2020-04-15': 6
+    },
     codeOfConductExists: {
         '2020-04-14': false,
         '2020-04-15': true

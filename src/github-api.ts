@@ -3,28 +3,28 @@ import {GitHub} from '@actions/github'
 import {Context} from '@actions/github/lib/context'
 import {IGraphQLResponse} from './interfaces'
 
-// export const getParticipation = async (
-//   octokit: GitHub,
-//   context: Context,
-//   metricDate: Date
-// ): Promise<number | undefined> => {
-//   try {
-//     const commitStats = (
-//       await octokit.repos.getCommitActivityStats({
-//         owner: context.repo.owner,
-//         repo: context.repo.repo
-//       })
-//     ).data
+export const getParticipation = async (
+  octokit: GitHub,
+  context: Context,
+  metricDate: Date
+): Promise<number | undefined> => {
+  try {
+    const commitStats = (
+      await octokit.repos.getCommitActivityStats({
+        owner: context.repo.owner,
+        repo: context.repo.repo
+      })
+    ).data
 
-//     const currentWeekStats = commitStats[commitStats.length - 1]
-//     const daysCommits = currentWeekStats.days[metricDate.getDay()]
+    const currentWeekStats = commitStats[commitStats.length - 1]
+    const daysCommits = currentWeekStats.days[metricDate.getDay()]
 
-//     return daysCommits
-//   } catch (err) {
-//     core.setFailed(`getParticipation: ${err}`)
-//     return undefined
-//   }
-// }
+    return daysCommits
+  } catch (err) {
+    core.setFailed(`getParticipation: ${err}`)
+    return undefined
+  }
+}
 
 export const getRepo = async (
   octokit: GitHub,
