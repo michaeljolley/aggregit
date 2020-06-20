@@ -22,9 +22,6 @@ export class Metrics {
       )
       // const traffic = await githubApi.getTraffic(octokit, github.context)
 
-      // eslint-disable-next-line no-console
-      console.dir(participation)
-
       // Unless we've successfully gathered all metrics, don't
       // record metrics
       if (totals && community && participation) {

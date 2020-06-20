@@ -23,6 +23,9 @@ export class Firebase {
   async save(repoMetric: IRepoMetric): Promise<void> {
     const docRef = this.db.collection('repos').doc(repoMetric.name)
 
+    // eslint-disable-next-line no-console
+    console.dir(repoMetric);
+
     await docRef.set(
       {
         name: repoMetric.name,
@@ -36,7 +39,7 @@ export class Firebase {
         totalPullRequests: {[this.metricDate]: repoMetric.totalPullRequests},
         totalIssues: {[this.metricDate]: repoMetric.totalIssues},
         healthPercentage: {[this.metricDate]: repoMetric.healthPercentage},
-        // commits: {[this.metricDate]: repoMetric.commits},
+        commits: {[this.metricDate]: repoMetric.commits},
         // totalViews: {[this.metricDate]: repoMetric.totalViews},
         // uniqueViews: {[this.metricDate]: repoMetric.uniqueViews},
 
