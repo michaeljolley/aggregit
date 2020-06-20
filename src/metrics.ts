@@ -15,16 +15,16 @@ export class Metrics {
     try {
       const totals = await githubApi.getRepoTotals(octokit, github.context)
       const community = await githubApi.getCommunity(octokit, github.context)
-      // const participation = await githubApi.getParticipation(
-      //   octokit,
-      //   github.context,
-      //   this.metricDate
-      // )
+      const participation = await githubApi.getParticipation(
+        octokit,
+        github.context,
+        this.metricDate
+      )
       // const traffic = await githubApi.getTraffic(octokit, github.context)
       // Unless we've successfully gathered all metrics, don't
       // record metrics
-      if (totals && community) {
-        //  && participation && traffic
+      if (totals && community && participation) {
+        //  && traffic
         const prCount =
           totals.repository.closedPRs.totalCount +
           totals.repository.mergedPRs.totalCount +
@@ -44,7 +44,7 @@ export class Metrics {
         repoMetric.healthPercentage = community.health_percentage
         repoMetric.totalPullRequests = prCount
         repoMetric.totalIssues = issueCount
-        // commits: participation
+        repoMetric.commits = participation
         // totalViews: todaysViews.count
         // uniqueViews: todaysViews.uniques
         repoMetric.codeOfConductExists = community.files.code_of_conduct
