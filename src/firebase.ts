@@ -23,9 +23,6 @@ export class Firebase {
   async save(repoMetric: IRepoMetric): Promise<void> {
     const docRef = this.db.collection('repos').doc(repoMetric.name)
 
-    // eslint-disable-next-line no-console
-    console.dir(repoMetric)
-
     await docRef.set(
       {
         name: repoMetric.name,

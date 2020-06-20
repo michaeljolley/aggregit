@@ -1,6 +1,6 @@
 {
   "name": "aggregit",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Records various metrics of the GitHub repository in a Firebase database.",
   "main": "dist/index.js",
   "scripts": {
