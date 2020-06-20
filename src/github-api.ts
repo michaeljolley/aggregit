@@ -16,6 +16,9 @@ export const getParticipation = async (
       })
     ).data
 
+    // eslint-disable-next-line no-console
+    console.dir(commitStats)
+
     const currentWeekStats = commitStats[commitStats.length - 1]
     const daysCommits = currentWeekStats.days[metricDate.getDay()]
 
