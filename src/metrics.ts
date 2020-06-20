@@ -21,6 +21,10 @@ export class Metrics {
         this.metricDate
       )
       // const traffic = await githubApi.getTraffic(octokit, github.context)
+
+      // eslint-disable-next-line no-console
+      console.dir(participation)
+
       // Unless we've successfully gathered all metrics, don't
       // record metrics
       if (totals && community && participation) {
@@ -64,8 +68,7 @@ export class Metrics {
         repoMetric.readMeExists = community.files.readme ? true : false
 
         core.info('Retrieving repo metrics complete')
-      }
-      else {
+      } else {
         return undefined
       }
     } catch (err) {
