@@ -96,37 +96,37 @@ export const getRepoTotals = async (
   }
 }
 
-// export const getTraffic = async (
-//   octokit: GitHub,
-//   context: Context
-// ): // context: Context
-// Promise<any | undefined> => {
-//   try {
-//     // const pat = 'f35694e93ef6f9db897f2b41ff42d81daeb5eeb4'
-//     // const x = axios.default.get(
-//     //   'https://api.github.com/repos/michaeljolley/aggregit/traffic/views',
-//     //   {
-//     //     headers: {
-//     //       Authorization: `token ${pat}`
-//     //     }
-//     //   }
-//     // )
+export const getTraffic = async (
+  octokit: GitHub,
+  context: Context
+): // context: Context
+Promise<any | undefined> => {
+  try {
+    const traffic = (
+      await octokit.repos.getViews({
+        owner: context.repo.owner,
+        repo: context.repo.repo
+      })
+    ).data
 
-//     // GET https://api.github.com/repos/michaeljolley/aggregit/traffic/views
-//     // Authorization: token f35694e93ef6f9db897f2b41ff42d81daeb5eeb4
+    core.info(JSON.stringify(traffic))
 
-//     const x = await octokit.repos.getViews({
-//       owner: context.repo.owner,
-//       repo: context.repo.repo
-//     })
+    const todaysViews =
+      traffic.views.length > 0
+        ? traffic.views[traffic.views.length - 1]
+        : {
+            count: 0,
+            uniques: 0
+          }
 
-//     core.info(JSON.stringify(x))
-//     return x
-//   } catch (err) {
-//     core.error(`Error getting traffic: ${err}`)
-//     return undefined
-//   }
-// }
+    return {count: todaysViews.count, uniques: todaysViews.uniques}
+  } catch (err) {
+    core.error(
+      '  - Unable to get traffic. githubToken must have push access to repo.'
+    )
+    return {count: 0, unique: 0}
+  }
+}
 
 export const getCommunity = async (
   octokit: GitHub,

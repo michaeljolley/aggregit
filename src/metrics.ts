@@ -29,9 +29,9 @@ export class Metrics {
       if (participation === undefined) return undefined
       core.info('  - Retrieved commits')
 
-      // const traffic = await githubApi.getTraffic(octokit, github.context)
-      // if (traffic === undefined) return undefined
-      // core.info('  - Retrieved traffic')
+      const traffic = await githubApi.getTraffic(octokit, github.context)
+      if (traffic === undefined) return undefined
+      core.info('  - Retrieved traffic')
 
       const prCount =
         totals.repository.closedPRs.totalCount +
@@ -40,21 +40,15 @@ export class Metrics {
       const issueCount =
         totals.repository.openIssues.totalCount +
         totals.repository.closedIssues.totalCount
-      // const todaysViews =
-      //   traffic.views.length > 0
-      //     ? traffic.views[traffic.views.length - 1]
-      //     : {
-      //         count: 0,
-      //         uniques: 0
-      //       }
+      
       repoMetric.pullRequests = totals.repository.openPRs.totalCount
       repoMetric.contributors = totals.repository.contributors.totalCount
       repoMetric.healthPercentage = community.health_percentage
       repoMetric.totalPullRequests = prCount
       repoMetric.totalIssues = issueCount
       repoMetric.commits = participation
-      // repoMetric.totalViews = todaysViews.count
-      // repoMetric.uniqueViews = todaysViews.uniques
+      repoMetric.totalViews = traffic.count
+      repoMetric.uniqueViews = traffic.uniques
       repoMetric.codeOfConductExists = community.files.code_of_conduct
         ? true
         : false
