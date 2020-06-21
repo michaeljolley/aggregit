@@ -24,8 +24,7 @@ export class Metrics {
 
       // Unless we've successfully gathered all metrics, don't
       // record metrics
-      if (totals && community && participation !== undefined) {
-        //  && traffic
+      if (totals && community && participation !== undefined && traffic) {
         const prCount =
           totals.repository.closedPRs.totalCount +
           totals.repository.mergedPRs.totalCount +

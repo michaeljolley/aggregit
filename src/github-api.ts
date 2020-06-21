@@ -11,12 +11,26 @@ export const getParticipation = async (
   metricDate: Date
 ): Promise<number | undefined> => {
   try {
-    const commitStats = (
+    let commitStats = (
       await octokit.repos.getCommitActivityStats({
         owner: context.repo.owner,
         repo: context.repo.repo
       })
     ).data
+
+    // Sometimes this API fails on the first attempt. Try one more time.
+    if (commitStats.length === 0) {
+      commitStats = (
+        await octokit.repos.getCommitActivityStats({
+          owner: context.repo.owner,
+          repo: context.repo.repo
+        })
+      ).data
+    }
+
+    if (commitStats.length === 0) {
+      return undefined
+    }
 
     const currentWeekStats = commitStats[commitStats.length - 1]
     const daysCommits = currentWeekStats.days[metricDate.getDay()]
@@ -37,7 +51,7 @@ export const getRepo = async (
       await octokit.repos.get({
         owner: context.repo.owner,
         repo: context.repo.repo
-      })
+      }) 
     ).data
   } catch (err) {
     core.setFailed(`getRepo: ${err}`)
@@ -88,23 +102,23 @@ export const getTraffic = async (
 ): // context: Context
 Promise<any | undefined> => {
   try {
-    const pat = 'f35694e93ef6f9db897f2b41ff42d81daeb5eeb4'
-    const x = axios.default.get(
-      'https://api.github.com/repos/michaeljolley/aggregit/traffic/views',
-      {
-        headers: {
-          Authorization: `token ${pat}`
-        }
-      }
-    )
+    // const pat = 'f35694e93ef6f9db897f2b41ff42d81daeb5eeb4'
+    // const x = axios.default.get(
+    //   'https://api.github.com/repos/michaeljolley/aggregit/traffic/views',
+    //   {
+    //     headers: {
+    //       Authorization: `token ${pat}`
+    //     }
+    //   }
+    // )
 
     // GET https://api.github.com/repos/michaeljolley/aggregit/traffic/views
     // Authorization: token f35694e93ef6f9db897f2b41ff42d81daeb5eeb4
 
-    // await octokit.repos.getViews({
-    //   owner: context.repo.owner,
-    //   repo: context.repo.repo
-    // })
+    const x = await octokit.repos.getViews({
+      owner: context.repo.owner,
+      repo: context.repo.repo
+    })
 
     core.info(JSON.stringify(x))
     return x
