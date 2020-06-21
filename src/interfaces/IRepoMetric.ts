@@ -12,8 +12,8 @@ export interface IRepoMetric {
   totalIssues?: number
   healthPercentage?: number
   commits?: number
-  // totalViews?: number
-  // uniqueViews?: number
+  totalViews?: number
+  uniqueViews?: number
 
   codeOfConductExists?: boolean
   contributingExists?: boolean

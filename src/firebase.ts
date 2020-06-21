@@ -21,6 +21,8 @@ export class Firebase {
   }
 
   async save(repoMetric: IRepoMetric): Promise<void> {
+    core.info('Saving to Firestore')
+
     const docRef = this.db.collection('repos').doc(repoMetric.name)
 
     await docRef.set(
@@ -37,8 +39,8 @@ export class Firebase {
         totalIssues: {[this.metricDate]: repoMetric.totalIssues},
         healthPercentage: {[this.metricDate]: repoMetric.healthPercentage},
         commits: {[this.metricDate]: repoMetric.commits},
-        // totalViews: {[this.metricDate]: repoMetric.totalViews},
-        // uniqueViews: {[this.metricDate]: repoMetric.uniqueViews},
+        totalViews: {[this.metricDate]: repoMetric.totalViews},
+        uniqueViews: {[this.metricDate]: repoMetric.uniqueViews},
 
         codeOfConductExists: {
           [this.metricDate]: repoMetric.codeOfConductExists
@@ -55,5 +57,6 @@ export class Firebase {
       },
       {merge: true}
     )
+    core.info('Saving to Firebase complete')
   }
 }

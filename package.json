@@ -1,6 +1,6 @@
 {
   "name": "aggregit",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "Records various metrics of the GitHub repository in a Firebase database.",
   "main": "dist/index.js",
   "scripts": {
@@ -18,6 +18,7 @@
   "dependencies": {
     "@actions/core": "^1.2.1",
     "@actions/github": "^2.0.1",
+    "axios": "^0.19.2",
     "action-guard": "git+https://github.com/MichaelJolley/action-guard.git",
     "actions-toolkit": "^4.0.0",
     "firebase-admin": "^8.10.0"
