@@ -3,28 +3,44 @@ import {GitHub} from '@actions/github'
 import {Context} from '@actions/github/lib/context'
 import {IGraphQLResponse} from './interfaces'
 
-// export const getParticipation = async (
-//   octokit: GitHub,
-//   context: Context,
-//   metricDate: Date
-// ): Promise<number | undefined> => {
-//   try {
-//     const commitStats = (
-//       await octokit.repos.getCommitActivityStats({
-//         owner: context.repo.owner,
-//         repo: context.repo.repo
-//       })
-//     ).data
+import * as axios from 'axios'
 
-//     const currentWeekStats = commitStats[commitStats.length - 1]
-//     const daysCommits = currentWeekStats.days[metricDate.getDay()]
+export const getParticipation = async (
+  octokit: GitHub,
+  context: Context,
+  metricDate: Date
+): Promise<number | undefined> => {
+  try {
+    let commitStats = (
+      await octokit.repos.getCommitActivityStats({
+        owner: context.repo.owner,
+        repo: context.repo.repo
+      })
+    ).data
 
-//     return daysCommits
-//   } catch (err) {
-//     core.setFailed(`getParticipation: ${err}`)
-//     return undefined
-//   }
-// }
+    // Sometimes this API fails on the first attempt. Try one more time.
+    if (commitStats.length === 0) {
+      commitStats = (
+        await octokit.repos.getCommitActivityStats({
+          owner: context.repo.owner,
+          repo: context.repo.repo
+        })
+      ).data
+    }
+
+    if (commitStats.length === 0) {
+      return undefined
+    }
+
+    const currentWeekStats = commitStats[commitStats.length - 1]
+    const daysCommits = currentWeekStats.days[metricDate.getDay()]
+
+    return daysCommits
+  } catch (err) {
+    core.setFailed(`getParticipation: ${err}`)
+    return undefined
+  }
+}
 
 export const getRepo = async (
   octokit: GitHub,
@@ -35,7 +51,7 @@ export const getRepo = async (
       await octokit.repos.get({
         owner: context.repo.owner,
         repo: context.repo.repo
-      })
+      }) 
     ).data
   } catch (err) {
     core.setFailed(`getRepo: ${err}`)
@@ -80,6 +96,36 @@ export const getRepoTotals = async (
   }
 }
 
+export const getTraffic = async (
+  octokit: GitHub,
+  context: Context
+): // context: Context
+Promise<any | undefined> => {
+  try {
+    const traffic = (
+      await octokit.repos.getViews({
+        owner: context.repo.owner,
+        repo: context.repo.repo
+      })
+    ).data
+
+    const todaysViews =
+      traffic.views.length > 0
+        ? traffic.views[traffic.views.length - 1]
+        : {
+            count: 0,
+            uniques: 0
+          }
+
+    return {count: todaysViews.count, uniques: todaysViews.uniques}
+  } catch (err) {
+    core.error(
+      '  - Unable to get traffic. githubToken must have push access to repo.'
+    )
+    return {count: 0, unique: 0}
+  }
+}
+
 export const getCommunity = async (
   octokit: GitHub,
   context: Context
@@ -101,20 +147,3 @@ export const getCommunity = async (
     return undefined
   }
 }
-
-// export const getTraffic = async (
-//   octokit: GitHub,
-//   context: Context
-// ): Promise<any | undefined> => {
-//   try {
-//     return (
-//       await octokit.repos.getViews({
-//         owner: context.repo.owner,
-//         repo: context.repo.repo
-//       })
-//     ).data
-//   } catch (err) {
-//     core.error(`Error getting traffic: ${err}`)
-//     return undefined
-//   }
-// }

@@ -25,6 +25,7 @@ const run = async (): Promise<void> => {
     if (repo.fork) {
       return
     }
+    core.info('Repo is not a fork. Continuing.')
 
     let repoMetric: IRepoMetric = {
       name: github.context.repo.repo,
@@ -36,10 +37,12 @@ const run = async (): Promise<void> => {
     }
 
     const metrics = new Metrics(new Date(`${metricDate}T00:00:00Z`))
-    await metrics.get(octokit, repoMetric)
+    const metric = await metrics.get(octokit, repoMetric)
+    if (metric !== undefined) {
+      const db = new Firebase(metricDate)
+      await db.save(repoMetric)
+    }
 
-    const db = new Firebase(metricDate)
-    await db.save(repoMetric)
   } catch (err) {
     core.error(err)
   }
