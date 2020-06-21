@@ -39,8 +39,8 @@ export class Firebase {
         totalIssues: {[this.metricDate]: repoMetric.totalIssues},
         healthPercentage: {[this.metricDate]: repoMetric.healthPercentage},
         commits: {[this.metricDate]: repoMetric.commits},
-        // totalViews: {[this.metricDate]: repoMetric.totalViews},
-        // uniqueViews: {[this.metricDate]: repoMetric.uniqueViews},
+        totalViews: {[this.metricDate]: repoMetric.totalViews},
+        uniqueViews: {[this.metricDate]: repoMetric.uniqueViews},
 
         codeOfConductExists: {
           [this.metricDate]: repoMetric.codeOfConductExists
