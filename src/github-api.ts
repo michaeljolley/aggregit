@@ -96,37 +96,37 @@ export const getRepoTotals = async (
   }
 }
 
-export const getTraffic = async (
-  octokit: GitHub,
-  context: Context
-): // context: Context
-Promise<any | undefined> => {
-  try {
-    // const pat = 'f35694e93ef6f9db897f2b41ff42d81daeb5eeb4'
-    // const x = axios.default.get(
-    //   'https://api.github.com/repos/michaeljolley/aggregit/traffic/views',
-    //   {
-    //     headers: {
-    //       Authorization: `token ${pat}`
-    //     }
-    //   }
-    // )
+// export const getTraffic = async (
+//   octokit: GitHub,
+//   context: Context
+// ): // context: Context
+// Promise<any | undefined> => {
+//   try {
+//     // const pat = 'f35694e93ef6f9db897f2b41ff42d81daeb5eeb4'
+//     // const x = axios.default.get(
+//     //   'https://api.github.com/repos/michaeljolley/aggregit/traffic/views',
+//     //   {
+//     //     headers: {
+//     //       Authorization: `token ${pat}`
+//     //     }
+//     //   }
+//     // )
 
-    // GET https://api.github.com/repos/michaeljolley/aggregit/traffic/views
-    // Authorization: token f35694e93ef6f9db897f2b41ff42d81daeb5eeb4
+//     // GET https://api.github.com/repos/michaeljolley/aggregit/traffic/views
+//     // Authorization: token f35694e93ef6f9db897f2b41ff42d81daeb5eeb4
 
-    const x = await octokit.repos.getViews({
-      owner: context.repo.owner,
-      repo: context.repo.repo
-    })
+//     const x = await octokit.repos.getViews({
+//       owner: context.repo.owner,
+//       repo: context.repo.repo
+//     })
 
-    core.info(JSON.stringify(x))
-    return x
-  } catch (err) {
-    core.error(`Error getting traffic: ${err}`)
-    return undefined
-  }
-}
+//     core.info(JSON.stringify(x))
+//     return x
+//   } catch (err) {
+//     core.error(`Error getting traffic: ${err}`)
+//     return undefined
+//   }
+// }
 
 export const getCommunity = async (
   octokit: GitHub,
