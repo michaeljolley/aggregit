@@ -25,6 +25,7 @@ const run = async (): Promise<void> => {
     if (repo.fork) {
       return
     }
+    core.info('Repo is not a fork. Continuing.')
 
     let repoMetric: IRepoMetric = {
       name: github.context.repo.repo,

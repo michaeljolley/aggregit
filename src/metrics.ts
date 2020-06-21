@@ -10,16 +10,16 @@ export class Metrics {
     octokit: github.GitHub,
     repoMetric: IRepoMetric
   ): Promise<IRepoMetric | undefined> {
-    core.info('Retrieving repo metrics')
+    core.info('Retrieving metrics')
 
     try {
       const totals = await githubApi.getRepoTotals(octokit, github.context)
       if (totals === undefined) return undefined
-      core.info('Metrics - Retrieved totals')
+      core.info('  - Retrieved totals')
 
       const community = await githubApi.getCommunity(octokit, github.context)
       if (community === undefined) return undefined
-      core.info('Metrics - Retrieved community data')
+      core.info('  - Retrieved community data')
 
       const participation = await githubApi.getParticipation(
         octokit,
@@ -27,11 +27,11 @@ export class Metrics {
         this.metricDate
       )
       if (participation === undefined) return undefined
-      core.info('Metrics - Retrieved commits')
+      core.info('  - Retrieved commits')
 
       // const traffic = await githubApi.getTraffic(octokit, github.context)
       // if (traffic === undefined) return undefined
-      // core.info('Metrics - Retrieved traffic')
+      // core.info('  - Retrieved traffic')
 
       const prCount =
         totals.repository.closedPRs.totalCount +
@@ -71,7 +71,7 @@ export class Metrics {
       repoMetric.licenseExists = community.files.license ? true : false
       repoMetric.readMeExists = community.files.readme ? true : false
 
-      core.info('Retrieving repo metrics complete')
+      core.info('Retrieving metrics complete')
     } catch (err) {
       core.setFailed(err)
       return undefined

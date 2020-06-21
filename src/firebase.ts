@@ -21,6 +21,8 @@ export class Firebase {
   }
 
   async save(repoMetric: IRepoMetric): Promise<void> {
+    core.info('Saving to Firestore')
+
     const docRef = this.db.collection('repos').doc(repoMetric.name)
 
     await docRef.set(
@@ -55,5 +57,6 @@ export class Firebase {
       },
       {merge: true}
     )
+    core.info('Saving to Firebase complete')
   }
 }
