@@ -40,7 +40,7 @@ export class Metrics {
       const issueCount =
         totals.repository.openIssues.totalCount +
         totals.repository.closedIssues.totalCount
-      
+
       repoMetric.pullRequests = totals.repository.openPRs.totalCount
       repoMetric.contributors = totals.repository.contributors.totalCount
       repoMetric.healthPercentage = community.health_percentage

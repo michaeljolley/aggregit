@@ -109,8 +109,6 @@ Promise<any | undefined> => {
       })
     ).data
 
-    core.info(JSON.stringify(traffic))
-
     const todaysViews =
       traffic.views.length > 0
         ? traffic.views[traffic.views.length - 1]

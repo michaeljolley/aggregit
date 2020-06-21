@@ -10,7 +10,9 @@ This action gathers metrics about the repository and loads them to a Firebase da
 
 ### `githubToken`
 
-**Required** GitHub secret token. Should provide `${{ secrets.GITHUB_TOKEN }}`
+**Required** GitHub secret token. Provide `${{ secrets.GITHUB_TOKEN }}` or a defined secret with a personal access token.
+
+> If you provide `${{ secrets.GITHUB_TOKEN }}` as the `githubToken` input, `totalViews` and `uniqueViews` will always be recorded as 0. This is due to the fact that the GITHUB_TOKEN secret does not have adequate permission to retrieve view data for repos. Instead, provide a personal access token that has `push` access to the repo.
 
 ### `project_id`
 
@@ -111,6 +113,14 @@ The following schema represents the data that will be saved for each repo docume
     readMeExists: {
         '2020-04-14': true,
         '2020-04-15': true
+    },
+    totalViews: {
+        '2020-04-14': 110,
+        '2020-04-15': 89
+    },
+    uniqueViews: {
+        '2020-04-14': 45,
+        '2020-04-15': 23
     }
 }
 ```
