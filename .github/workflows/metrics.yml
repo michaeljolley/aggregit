@@ -2,7 +2,7 @@ name: Aggregit
 
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "0 0 * * *"
 
 jobs:
   recordMetrics:
@@ -10,7 +10,7 @@ jobs:
     steps:
     - uses: michaeljolley/aggregit@traffic
       with:
-        githubToken: ${{ secrets.GITHUB_TOKEN }}
+        githubToken: ${{ secrets.GITHUBTOKEN }}
         project_id: ${{ secrets.project_id }}
         private_key: ${{ secrets.private_key }}
         client_email: ${{ secrets.client_email }}
