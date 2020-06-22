@@ -28,11 +28,16 @@ export const getParticipation = async (
       ).data
     }
 
+    core.info(JSON.stringify(commitStats))
+
     if (commitStats.length === 0) {
       return undefined
     }
 
     const currentWeekStats = commitStats[commitStats.length - 1]
+    if (currentWeekStats === undefined) {
+      return undefined
+    }
     const daysCommits = currentWeekStats.days[metricDate.getDay()]
 
     return daysCommits
