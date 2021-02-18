@@ -3,8 +3,6 @@ import {GitHub} from '@actions/github'
 import {Context} from '@actions/github/lib/context'
 import {IGraphQLResponse} from './interfaces'
 
-import * as axios from 'axios'
-
 export const getParticipation = async (
   octokit: GitHub,
   context: Context,
@@ -56,7 +54,7 @@ export const getRepo = async (
       await octokit.repos.get({
         owner: context.repo.owner,
         repo: context.repo.repo
-      }) 
+      })
     ).data
   } catch (err) {
     core.setFailed(`getRepo: ${err}`)
@@ -127,7 +125,7 @@ Promise<any | undefined> => {
     core.error(
       '  - Unable to get traffic. githubToken must have push access to repo.'
     )
-    return {count: 0, unique: 0}
+    return {count: 0, uniques: 0}
   }
 }
 
