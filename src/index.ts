@@ -27,7 +27,7 @@ const run = async (): Promise<void> => {
     }
     core.info('Repo is not a fork. Continuing.')
 
-    let repoMetric: IRepoMetric = {
+    const repoMetric: IRepoMetric = {
       name: github.context.repo.repo,
       url: repo.html_url,
       issues: repo.open_issues_count,
@@ -42,7 +42,6 @@ const run = async (): Promise<void> => {
       const db = new Firebase(metricDate)
       await db.save(repoMetric)
     }
-
   } catch (err) {
     core.error(err)
   }
