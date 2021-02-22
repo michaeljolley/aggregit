@@ -18,7 +18,7 @@
   "dependencies": {
     "@actions/core": "^1.2.6",
     "@actions/github": "^2.0.1",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "action-guard": "git+https://github.com/MichaelJolley/action-guard.git",
     "actions-toolkit": "^4.0.0",
     "firebase-admin": "^8.10.0"
