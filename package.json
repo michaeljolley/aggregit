@@ -16,7 +16,7 @@
   "license": "MIT",
   "repository": "https://github.com/MichaelJolley/aggregit",
   "dependencies": {
-    "@actions/core": "^1.2.6",
+    "@actions/core": "^1.9.1",
     "@actions/github": "^2.0.1",
     "axios": "^0.19.2",
     "action-guard": "git+https://github.com/MichaelJolley/action-guard.git",
